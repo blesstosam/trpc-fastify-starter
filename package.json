@@ -1,0 +1,38 @@
+{
+  "name": "trpc-demo",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build:client": "pnpm --filter ./client build",
+    "build:server": "pnpm --filter ./server build",
+    "build": "run-s build:server build:client",
+    "dev": "pnpm --filter ./client dev",
+    "start:dev": "pnpm --filter ./server dev",
+    "start:client": "pnpm --filter ./client preview",
+    "start:server": "pnpm --filter ./server start",
+    "start": "run-p start:*",
+    "test:e2e": "playwright test",
+    "test-dev": "start-server-and-test dev 3000 test:e2e",
+    "test-start": "start-server-and-test start 3000 test:e2e",
+    "lint": "eslint \"{server/src,client/src,test}/**/*.{js,ts,json}\" --fix"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.19.0",
+    "@types/node": "^25.2.0",
+    "eslint": "^9.31.0",
+    "@playwright/test": "^1.58.2",
+    "npm-run-all2": "^8.0.4",
+    "start-server-and-test": "^1.12.0",
+    "wait-port": "^1.0.1",
+    "typescript": "^5.9.2",
+    "lint-staged": "^13.2.2",
+    "simple-git-hooks": "^2.11.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,json}": "eslint --fix"
+  }
+}

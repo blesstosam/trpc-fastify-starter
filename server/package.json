@@ -1,0 +1,35 @@
+{
+  "name": "trpc-demo-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --name -",
+    "db:deploy": "dotenv -e .env.prod.local -- prisma migrate deploy",
+    "db:pull": "prisma db pull"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@prisma/adapter-mariadb": "~6.19.2",
+    "@prisma/client": "~6.19.2",
+    "@sapphire/snowflake": "^3.5.5",
+    "@scalar/fastify-api-reference": "^1.44.9",
+    "@trpc/server": "npm:@trpc/server",
+    "fastify": "^5.7.4",
+    "jsonwebtoken": "^9.0.3",
+    "mariadb": "^3.4.5",
+    "superjson": "^2.2.2",
+    "trpc-to-openapi": "^3.1.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "dotenv-cli": "^11.0.0",
+    "prisma": "~6.19.2",
+    "tsx": "^4.19.3"
+  }
+}

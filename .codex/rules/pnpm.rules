@@ -1,0 +1,8 @@
+prefix_rule(
+  pattern=["pnpm", "--filter"]
+  decision="allow"
+  match = [
+    "pnpm --filter ./server add",
+    "pnpm --filter ./client install",
+  ],
+)

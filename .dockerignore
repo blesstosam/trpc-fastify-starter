@@ -1,0 +1,12 @@
+/node_modules
+.vscode
+.agent-docs
+.claude
+.codex
+.cursor
+.github
+.git
+.gitignore
+*.md
+dist
+logs

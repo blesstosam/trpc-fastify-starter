@@ -43,6 +43,6 @@
 - 当写完一个功能之后（前后端代码都已经写完），你可以在test文件夹里写上该功能的基础测试用例，保证功能是基本可用的
 - 使用unplugin-icons渲染图标，安装了@iconify-json/lucide图标库，你可以选择里面的图标进行渲染。示例：`import IconBomb from '~icons/lucide/atom'`
 
-# ExecPlans
+## ExecPlans
 
 当编写复杂功能或进行重大重构时，请使用ExecPlan（如 .agent-docs/PLANS.md 中所述）从设计到实现全过程执行。

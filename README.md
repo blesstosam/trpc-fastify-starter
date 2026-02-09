@@ -70,8 +70,8 @@ pnpm dev
 - Tag 管理页面: `client/src/views/TagManageView.vue`
 
 **测试**
-Playwright 默认使用 `PLAYWRIGHT_TEST_BASE_URL`，未设置时为 `http://localhost:3000`。
-如需改为本地前端地址，设置环境变量：
+Playwright 默认使用 `PLAYWRIGHT_TEST_BASE_URL`，未设置时为 `http://localhost:5173`。
+如需修改测试地址，设置环境变量：
 
 ```bash
 PLAYWRIGHT_TEST_BASE_URL="http://localhost:5173" pnpm test:e2e

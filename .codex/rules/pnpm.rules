@@ -8,3 +8,5 @@ prefix_rule(
     "pnpm --filter ./client install",
   ],
 )
+
+prefix_rule(pattern=["pnpm", "exec", "playwright", "test"], decision="allow")

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { hashPassword, signJwt } from '../../lib/auth'
+import { hashPassword } from '../../lib/auth'
 import { prisma } from '../../lib/prisma'
 
 const authUserSelect = {
@@ -57,13 +57,5 @@ export async function loginByPassword(account: string, password: string) {
     })
   }
 
-  const serializedUser = serializeUser(user)
-  const token = signJwt({
-    sub: serializedUser.id,
-    username: serializedUser.username,
-    userId: serializedUser.userId,
-    superAdmin: serializedUser.superAdmin,
-  })
-
-  return { token, user: serializedUser }
+  return serializeUser(user)
 }

@@ -1,6 +1,5 @@
 import type { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify'
 import type { JwtPayload } from '../lib/auth'
-import { verifyJwt } from '../lib/auth'
 import { prisma } from '../lib/prisma'
 
 export interface AuthUser {
@@ -63,7 +62,7 @@ async function resolveCurrentUser(payload: JwtPayload | null): Promise<AuthUser 
 
 export async function createContext(opts: CreateFastifyContextOptions) {
   const token = parseBearerToken(opts.req.headers.authorization)
-  const payload = token ? verifyJwt(token) : null
+  const payload = token ? verifyToken(opts, token) : null
   const user = await resolveCurrentUser(payload)
 
   return {
@@ -71,6 +70,24 @@ export async function createContext(opts: CreateFastifyContextOptions) {
     res: opts.res,
     user,
     prisma,
+  }
+}
+
+function verifyToken(opts: CreateFastifyContextOptions, token: string): JwtPayload | null {
+  try {
+    const payload = opts.req.server.jwt.verify<JwtPayload>(token)
+    if (
+      typeof payload.sub !== 'string'
+      || typeof payload.username !== 'string'
+      || typeof payload.userId !== 'number'
+      || typeof payload.superAdmin !== 'number'
+    ) {
+      return null
+    }
+    return payload
+  }
+  catch {
+    return null
   }
 }
 

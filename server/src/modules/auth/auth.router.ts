@@ -1,3 +1,4 @@
+import { jwtSignOptions } from '../../lib/auth'
 import { authedProcedure, publicProcedure, router } from '../../rpc/trpc'
 import { userOutputSchema } from '../user/dto'
 import { loginByPassword } from './auth.service'
@@ -13,7 +14,20 @@ export const authRouter = router({
     })
     .input(loginInputSchema)
     .output(loginOutputSchema)
-    .mutation(({ input }) => loginByPassword(input.account, input.password)),
+    .mutation(async ({ ctx, input }) => {
+      const user = await loginByPassword(input.account, input.password)
+      const token = ctx.req.server.jwt.sign(
+        {
+          sub: user.id,
+          username: user.username,
+          userId: user.userId,
+          superAdmin: user.superAdmin,
+        },
+        jwtSignOptions,
+      )
+
+      return { token, user }
+    }),
 
   me: authedProcedure
     .meta({

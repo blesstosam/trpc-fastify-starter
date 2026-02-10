@@ -1,5 +1,5 @@
 {
-  "name": "trpc-demo-client",
+  "name": "trpc-client",
   "type": "module",
   "version": "0.0.0",
   "private": true,

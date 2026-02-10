@@ -2,6 +2,7 @@ import scalarApi from '@scalar/fastify-api-reference'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import Fastify, { FastifyInstance } from 'fastify'
 import { generateOpenApiDocument } from 'trpc-to-openapi'
+import { getJwtSecret } from './lib/auth'
 import { createContext } from './rpc/context'
 import { appRouter } from './rpc/router'
 
@@ -12,6 +13,10 @@ async function main() {
 
   await app.register(import('@fastify/cors'), {
     origin: true,
+  })
+
+  await app.register(import('@fastify/jwt'), {
+    secret: getJwtSecret(),
   })
 
   await app.register(fastifyTRPCPlugin, {

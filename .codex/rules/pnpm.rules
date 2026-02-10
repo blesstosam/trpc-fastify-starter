@@ -3,6 +3,8 @@ prefix_rule(
   decision="allow"
   match = [
     "pnpm --filter ./server add",
+    "pnpm --filter ./server install",
+    "pnpm --filter ./client add",
     "pnpm --filter ./client install",
   ],
 )

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@trpc/client": "^11.9.0",
+    "ant-design-vue": "^4.2.6",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.3",
     "superjson": "^2.2.2",
@@ -32,6 +33,7 @@
     "simple-git-hooks": "^2.13.0",
     "tailwindcss": "^4.1.12",
     "unplugin-icons": "^23.0.1",
+    "unplugin-vue-components": "^31.0.0",
     "vite": "^8.0.0-beta.11",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vitest": "^4.0.18",

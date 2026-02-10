@@ -61,14 +61,14 @@ watch(
       <span class="ml-auto text-xs text-slate-500">
         {{ username ? `当前用户: ${username}` : '未登录' }}
       </span>
-      <button
+      <a-button
         v-if="hasToken"
-        type="button"
         class="rounded-md border border-slate-300 px-2 py-1 text-xs hover:border-slate-400"
         @click="logout"
       >
         退出
-      </button>
+      </a-button>
+
     </nav>
   </header>
 

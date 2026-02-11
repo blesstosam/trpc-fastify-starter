@@ -15,7 +15,7 @@
     "test:e2e": "playwright test",
     "test-dev": "start-server-and-test dev 3000 test:e2e",
     "test-start": "start-server-and-test start 3000 test:e2e",
-    "lint": "eslint \"{server/src,client/src,test}/**/*.{js,ts,json}\" --fix",
+    "lint": "eslint \"{server/src,client/src,test}/**/*.{js,ts,json,vue}\" --fix",
     "postinstall": "npx simple-git-hooks"
   },
   "devDependencies": {
@@ -34,6 +34,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,json}": "eslint --fix"
+    "*.{js,ts,json,vue}": "eslint --fix"
   }
 }

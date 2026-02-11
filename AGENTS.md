@@ -39,10 +39,9 @@
 ## 重要
 - 你在开发的时候，我已经手动把后端和前端服务起好了，后端服务地址为`http://localhost:2022/`，前端服务地址为`http://localhost:5173/`
 - 当开发的功能同时包含前后端的时候，先把后端接口写好，然后根据给出的原型图1:1还原UI，然后使用`trpc/client`调用后端接口，然后在test文件夹里写上该功能的完整测试用例，保证功能是可用的
-- 每次修改完代码之后对修改的文件进行 `eslint --fix`，如果还有报错继续修复
+- 每次修改完代码之后对修改的文件进行 `pnpm eslint --fix ${filepath}`，如果还有报错继续修复
 - 每次修改完代码之后检查文件是否有typescript类型报错，如果有继续修复直到没有报错为止
 - 涉及到数据库变更(schema.prisma变更)的时候，先使用`pnpm --filter ./server db:migrate`生成迁移脚本并迁移到开发数据库
-- 使用unplugin-icons渲染图标，安装了@iconify-json/lucide图标库，你可以选择里面的图标进行渲染。示例：`import IconBomb from '~icons/lucide/atom'`
 
 ## ExecPlans
 

@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "lib": ["es2023"],
-    "module": "esnext",
-    "target": "es2022",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
     "outDir": "dist"
   },
   "exclude": [

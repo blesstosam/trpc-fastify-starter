@@ -47,6 +47,9 @@ importers:
       ant-design-vue:
         specifier: ^4.2.6
         version: 4.2.6(vue@3.5.27(typescript@5.9.3))
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.19
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -1794,8 +1797,8 @@ packages:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
     engines: {node: '>=18'}
 
-  dayjs@1.11.18:
-    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
+  dayjs@1.11.19:
+    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
 
   debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -5503,7 +5506,7 @@ snapshots:
       array-tree-filter: 2.1.0
       async-validator: 4.2.5
       csstype: 3.2.3
-      dayjs: 1.11.18
+      dayjs: 1.11.19
       dom-align: 1.12.4
       dom-scroll-into-view: 2.0.1
       lodash: 4.17.23
@@ -5755,7 +5758,7 @@ snapshots:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
 
-  dayjs@1.11.18: {}
+  dayjs@1.11.19: {}
 
   debug@4.3.4:
     dependencies:

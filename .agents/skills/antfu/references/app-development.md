@@ -1,6 +1,6 @@
 ---
 name: app-development
-description: Vue/Nuxt/UnoCSS application conventions. Use when building web apps, choosing between Vite and Nuxt, or writing Vue components.
+description: Vue/Nuxt/TailwindCss application conventions. Use when building web apps, choosing between Vite and Nuxt, or writing Vue components.
 ---
 
 # App Development
@@ -19,7 +19,7 @@ description: Vue/Nuxt/UnoCSS application conventions. Use when building web apps
 | Script syntax | Always `<script setup lang="ts">` |
 | State | Prefer `shallowRef()` over `ref()` |
 | Objects | Use `ref()`, avoid `reactive()` |
-| Styling | UnoCSS |
+| Styling | TailwindCss |
 | Utilities | VueUse |
 
 ### Props and Emits

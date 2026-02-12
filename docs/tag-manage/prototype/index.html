@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tag 管理原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f2ea;
+        --panel: #fffdf7;
+        --ink: #1f2937;
+        --ink-soft: #4b5563;
+        --accent: #0f766e;
+        --accent-2: #f97316;
+        --line: #e5dcc9;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Noto Sans SC', sans-serif;
+        color: var(--ink);
+        background: radial-gradient(circle at 15% 10%, #fff5dd 0%, var(--bg) 45%),
+          linear-gradient(120deg, #f8efe2 0%, #f2f4e7 100%);
+      }
+
+      .title-font {
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.35s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen p-4 md:p-8">
+      <div class="mx-auto max-w-6xl rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-4 shadow-[0_20px_60px_rgba(31,41,55,0.08)] md:p-8">
+        <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="title-font text-xs tracking-[0.2em] text-[var(--accent-2)]">CONTENT OPS</p>
+            <h1 class="title-font mt-1 text-3xl font-bold md:text-4xl">Tag 管理</h1>
+            <p class="mt-1 text-sm text-[var(--ink-soft)]">在一个页面完成 Tag 的查询、新建、编辑与删除。</p>
+          </div>
+          <button id="createBtn" class="rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90">
+            新建 Tag
+          </button>
+        </header>
+
+        <section class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <input
+            type="text"
+            placeholder="搜索 Tag 名称..."
+            class="w-full rounded-xl border border-[var(--line)] bg-white px-4 py-2 text-sm outline-none ring-[var(--accent)] transition focus:ring-2 md:max-w-sm"
+          />
+          <div class="rounded-xl border border-[var(--line)] bg-[#fff8ee] px-4 py-2 text-xs text-[var(--ink-soft)]">共 <span class="font-semibold text-[var(--ink)]">3</span> 个 Tag</div>
+        </section>
+
+        <section class="overflow-hidden rounded-2xl border border-[var(--line)]">
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-collapse bg-white text-sm">
+              <thead class="bg-[#f8f4ea] text-left text-[var(--ink-soft)]">
+                <tr>
+                  <th class="px-4 py-3 font-medium">Tag 名称</th>
+                  <th class="px-4 py-3 font-medium">描述</th>
+                  <th class="px-4 py-3 font-medium">创建时间</th>
+                  <th class="px-4 py-3 font-medium">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-t border-[var(--line)]">
+                  <td class="px-4 py-3 font-semibold">前端</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">用于界面开发相关内容</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">2026-02-10 11:20</td>
+                  <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                      <button class="editBtn rounded-lg border border-[var(--line)] px-3 py-1 text-xs hover:bg-[#f7f4ec]">编辑</button>
+                      <button class="deleteBtn rounded-lg border border-[#fecaca] px-3 py-1 text-xs text-[#b91c1c] hover:bg-[#fff1f1]">删除</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="border-t border-[var(--line)]">
+                  <td class="px-4 py-3 font-semibold">后端</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">服务与接口相关内容</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">2026-02-11 15:08</td>
+                  <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                      <button class="editBtn rounded-lg border border-[var(--line)] px-3 py-1 text-xs hover:bg-[#f7f4ec]">编辑</button>
+                      <button class="deleteBtn rounded-lg border border-[#fecaca] px-3 py-1 text-xs text-[#b91c1c] hover:bg-[#fff1f1]">删除</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="border-t border-[var(--line)]">
+                  <td class="px-4 py-3 font-semibold">测试</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">自动化测试与质量保障</td>
+                  <td class="px-4 py-3 text-[var(--ink-soft)]">2026-02-12 09:42</td>
+                  <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                      <button class="editBtn rounded-lg border border-[var(--line)] px-3 py-1 text-xs hover:bg-[#f7f4ec]">编辑</button>
+                      <button class="deleteBtn rounded-lg border border-[#fecaca] px-3 py-1 text-xs text-[#b91c1c] hover:bg-[#fff1f1]">删除</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/35 p-4">
+      <div class="fade-in w-full max-w-md rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-xl">
+        <h2 id="modalTitle" class="title-font text-xl font-bold">新建 Tag</h2>
+        <div class="mt-4 space-y-3">
+          <label class="block text-sm">
+            <span class="mb-1 block text-[var(--ink-soft)]">Tag 名称</span>
+            <input class="w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--accent)]" value="" />
+          </label>
+          <label class="block text-sm">
+            <span class="mb-1 block text-[var(--ink-soft)]">描述</span>
+            <textarea class="h-24 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--accent)]"></textarea>
+          </label>
+        </div>
+        <div class="mt-5 flex justify-end gap-2">
+          <button id="cancelBtn" class="rounded-lg border border-[var(--line)] px-3 py-2 text-sm">取消</button>
+          <button class="rounded-lg bg-[var(--accent)] px-3 py-2 text-sm font-semibold text-white">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirm" class="fixed inset-0 hidden items-center justify-center bg-black/35 p-4">
+      <div class="fade-in w-full max-w-sm rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-xl">
+        <h3 class="title-font text-lg font-bold">确认删除</h3>
+        <p class="mt-2 text-sm text-[var(--ink-soft)]">删除后不可恢复，确定删除该 Tag 吗？</p>
+        <div class="mt-5 flex justify-end gap-2">
+          <button id="cancelDeleteBtn" class="rounded-lg border border-[var(--line)] px-3 py-2 text-sm">取消</button>
+          <button class="rounded-lg bg-[#b91c1c] px-3 py-2 text-sm font-semibold text-white">确认删除</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const modal = document.getElementById('modal');
+      const confirm = document.getElementById('confirm');
+      const modalTitle = document.getElementById('modalTitle');
+
+      document.getElementById('createBtn').addEventListener('click', () => {
+        modalTitle.textContent = '新建 Tag';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+
+      document.querySelectorAll('.editBtn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          modalTitle.textContent = '编辑 Tag';
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        });
+      });
+
+      document.querySelectorAll('.deleteBtn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          confirm.classList.remove('hidden');
+          confirm.classList.add('flex');
+        });
+      });
+
+      document.getElementById('cancelBtn').addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+
+      document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+        confirm.classList.add('hidden');
+        confirm.classList.remove('flex');
+      });
+    </script>
+  </body>
+</html>

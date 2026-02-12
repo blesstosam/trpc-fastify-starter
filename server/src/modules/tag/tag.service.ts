@@ -27,31 +27,39 @@ function serializeTag(tag: TagRow) {
   return { ...tag, id: tag.id.toString() }
 }
 
+async function assertTagNameAvailable(name: string, currentId?: string) {
+  const existing = await prisma.tag.findUnique({
+    where: { name },
+    select: { id: true },
+  })
+
+  if (!existing) {
+    return
+  }
+
+  if (currentId && existing.id.toString() === currentId) {
+    return
+  }
+
+  throw new TRPCError({ code: 'CONFLICT', message: 'Tag 名称已存在' })
+}
+
 export async function listTags(input: TagListInput) {
-  const page = input?.page ?? 1
-  const pageSize = input?.pageSize ?? 10
   const keyword = input?.keyword
   const where = keyword
-    ? {
-        OR: [
-          { name: { contains: keyword } },
-          { description: { contains: keyword } },
-        ],
-      }
+    ? { name: { contains: keyword } }
     : undefined
 
   const [items, total] = await prisma.$transaction([
     prisma.tag.findMany({
       where,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { id: 'desc' },
+      orderBy: { createdAt: 'desc' },
       select: tagSelect,
     }),
     prisma.tag.count({ where }),
   ])
 
-  return { items: items.map(serializeTag), total, page, pageSize }
+  return { items: items.map(serializeTag), total }
 }
 
 export async function getTagById(id: string) {
@@ -61,18 +69,23 @@ export async function getTagById(id: string) {
   })
 
   if (!tag) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: 'Tag not found' })
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'Tag 不存在或已删除' })
   }
 
   return serializeTag(tag)
 }
 
 export async function createTag(input: CreateTagInput) {
+  const name = input.name.trim()
+  const description = input.description?.trim() ?? ''
+
+  await assertTagNameAvailable(name)
+
   const tag = await prisma.tag.create({
     data: {
       id: nextSnowflakeId(),
-      name: input.name,
-      description: input.description ?? null,
+      name,
+      description,
       updatedAt: new Date(),
     },
     select: tagSelect,
@@ -82,12 +95,16 @@ export async function createTag(input: CreateTagInput) {
 
 export async function updateTag(input: UpdateTagInput) {
   await getTagById(input.id)
-  const { id, ...rest } = input
+  const name = input.name.trim()
+  const description = input.description?.trim() ?? ''
+
+  await assertTagNameAvailable(name, input.id)
 
   const tag = await prisma.tag.update({
-    where: { id: toSnowflakeId(id) },
+    where: { id: toSnowflakeId(input.id) },
     data: {
-      ...rest,
+      name,
+      description,
       updatedAt: new Date(),
     },
     select: tagSelect,

@@ -1,6 +1,6 @@
 ---
 name: best-practices
-description: 使用本仓库开发的最佳实践汇总，前后端都包含，在开发任何任务之前都需要参考该文档。
+description: 使用本仓库开发的最佳实践汇总，前后端都包含，在开发任何任务（代码开发）之前都需要参考该文档，做产品设计不需要参考该文档。
 metadata:
   author: blesstosam
   version: "2026.02.11"

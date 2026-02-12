@@ -10,8 +10,6 @@ export const tagSchema = z.object({
 
 export const tagListInputSchema = z
   .object({
-    page: z.number().int().min(1).default(1),
-    pageSize: z.number().int().min(1).max(50).default(10),
     keyword: z.string().trim().min(1).optional(),
   })
   .optional()
@@ -19,8 +17,6 @@ export const tagListInputSchema = z
 export const tagListOutputSchema = z.object({
   items: z.array(tagSchema),
   total: z.number().int(),
-  page: z.number().int(),
-  pageSize: z.number().int(),
 })
 
 const tagIdSchema = z.string().regex(/^\d+$/, { message: 'id must be a numeric string' })
@@ -28,14 +24,14 @@ const tagIdSchema = z.string().regex(/^\d+$/, { message: 'id must be a numeric s
 export const tagByIdInputSchema = z.object({ id: tagIdSchema })
 
 export const createTagInputSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  description: z.string().trim().max(255).nullable().optional(),
+  name: z.string().trim().min(1, 'Tag 名称不能为空').max(30, 'Tag 名称不能超过 30 个字符'),
+  description: z.string().trim().max(120, '描述不能超过 120 个字符').optional(),
 })
 
 export const updateTagInputSchema = z.object({
   id: tagIdSchema,
-  name: z.string().trim().min(1).max(100).optional(),
-  description: z.string().trim().max(255).nullable().optional(),
+  name: z.string().trim().min(1, 'Tag 名称不能为空').max(30, 'Tag 名称不能超过 30 个字符'),
+  description: z.string().trim().max(120, '描述不能超过 120 个字符').optional(),
 })
 
 export const deleteTagOutputSchema = z.object({ success: z.literal(true) })

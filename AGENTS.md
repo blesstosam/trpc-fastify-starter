@@ -45,4 +45,4 @@
 
 ## ExecPlans
 
-当编写复杂功能或进行重大重构时，请使用ExecPlan（如 .agent-docs/PLANS.md 中所述）从设计到实现全过程执行。
+当编写复杂功能或进行重大重构时，请使用ExecPlan（如 docs/PLANS.md 中所述）从设计到实现全过程执行。

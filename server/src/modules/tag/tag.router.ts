@@ -1,4 +1,4 @@
-import { publicProcedure, router } from '../../rpc/trpc'
+import { authedProcedure, router } from '../../rpc/trpc'
 import {
   createTagInputSchema,
   deleteTagOutputSchema,
@@ -11,7 +11,7 @@ import {
 import { createTag, deleteTag, getTagById, listTags, updateTag } from './tag.service'
 
 export const tagsRouter = router({
-  list: publicProcedure
+  list: authedProcedure
     .meta({
       openapi: {
         summary: 'List tags',
@@ -22,7 +22,7 @@ export const tagsRouter = router({
     .output(tagListOutputSchema)
     .query(({ input }) => listTags(input)),
 
-  getById: publicProcedure
+  getById: authedProcedure
     .meta({
       openapi: {
         summary: 'Get tag by id',
@@ -33,7 +33,7 @@ export const tagsRouter = router({
     .output(tagSchema)
     .query(({ input }) => getTagById(input.id)),
 
-  create: publicProcedure
+  create: authedProcedure
     .meta({
       openapi: {
         summary: 'Create tag',
@@ -44,7 +44,7 @@ export const tagsRouter = router({
     .output(tagSchema)
     .mutation(({ input }) => createTag(input)),
 
-  update: publicProcedure
+  update: authedProcedure
     .meta({
       openapi: {
         summary: 'Update tag',
@@ -55,7 +55,7 @@ export const tagsRouter = router({
     .output(tagSchema)
     .mutation(({ input }) => updateTag(input)),
 
-  remove: publicProcedure
+  remove: authedProcedure
     .meta({
       openapi: {
         summary: 'Delete tag',

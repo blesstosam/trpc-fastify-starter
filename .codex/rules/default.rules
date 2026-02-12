@@ -6,6 +6,7 @@ prefix_rule(pattern=["pnpm", "--filter", "./client", "install"], decision="allow
 
 # ui自动化测试
 prefix_rule(pattern=["pnpm", "exec", "playwright", "test"], decision="allow")
+prefix_rule(pattern=["pnpm", "test:e2e", "--"], decision="allow")
 
 # 数据库迁移
 prefix_rule(pattern=["npx", "prisma", "migrate", "dev"], decision="allow")

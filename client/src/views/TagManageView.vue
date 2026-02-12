@@ -108,6 +108,7 @@ async function submitForm() {
 }
 
 async function removeTag(tag: TagItem) {
+  // eslint-disable-next-line no-alert
   const confirmed = window.confirm(`确认删除标签「${tag.name}」吗？`)
   if (!confirmed) {
     return
@@ -233,11 +234,21 @@ onMounted(async () => {
           <table class="w-full min-w-[640px] text-left text-sm">
             <thead class="bg-slate-50 text-slate-500">
               <tr>
-                <th class="px-3 py-2">ID</th>
-                <th class="px-3 py-2">名称</th>
-                <th class="px-3 py-2">描述</th>
-                <th class="px-3 py-2">更新时间</th>
-                <th class="px-3 py-2 text-right">操作</th>
+                <th class="px-3 py-2">
+                  ID
+                </th>
+                <th class="px-3 py-2">
+                  名称
+                </th>
+                <th class="px-3 py-2">
+                  描述
+                </th>
+                <th class="px-3 py-2">
+                  更新时间
+                </th>
+                <th class="px-3 py-2 text-right">
+                  操作
+                </th>
               </tr>
             </thead>
             <tbody>

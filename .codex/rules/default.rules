@@ -1,0 +1,16 @@
+# 安装依赖不能放在沙箱里执行
+prefix_rule(pattern=["pnpm", "--filter", "./server", "add"], decision="allow")
+prefix_rule(pattern=["pnpm", "--filter", "./server", "install"], decision="allow")
+prefix_rule(pattern=["pnpm", "--filter", "./client", "add"], decision="allow")
+prefix_rule(pattern=["pnpm", "--filter", "./client", "install"], decision="allow")
+
+# ui自动化测试
+prefix_rule(pattern=["pnpm", "exec", "playwright", "test"], decision="allow")
+# 为了playwright-interactive执行不需要授权
+# 不行的话要`codex --sandbox danger-full-access`
+prefix_rule(pattern=["pnpm", "exec", "playwright"], decision="allow")
+prefix_rule(pattern=["pnpm", "test:e2e", "--"], decision="allow")
+
+# 数据库迁移
+prefix_rule(pattern=["npx", "prisma", "migrate", "dev"], decision="allow")
+prefix_rule(pattern=["pnpmx", "prisma", "migrate", "dev"], decision="allow")

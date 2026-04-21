@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "skills": {
+    "bug-fix": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "computedHash": "326743def365578d4e2fcb84a54ed897453f479c41ad91698e093a5c040a7404"
+    },
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "6962db07127ee540a56e4677f65576d0727668a1d67f7da8bc978f10791c2bfe"
+    },
+    "excalidraw-diagram": {
+      "source": "axtonliu/axton-obsidian-visual-skills",
+      "sourceType": "github",
+      "computedHash": "9c9592ccce8ec78626088714ca35f164d0dd2a79235e130e52f43f308ee83315"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+    },
+    "playwright-interactive": {
+      "source": "openai/skills",
+      "sourceType": "github",
+      "computedHash": "11e4215d9b57460ad1aaae461eb9b08e4d58b808418f97abe156146e53b05d36"
+    },
+    "pnpm": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "computedHash": "318f9fca2441a3e06fedc336e195dd18be5dbe901064e4fa71b76b40b096ab3a"
+    },
+    "prisma-cli": {
+      "source": "prisma/skills",
+      "sourceType": "github",
+      "computedHash": "b9d9314e3716af725997843c5026ba0e258fb2d27a986190bf2ad53be67b72b9"
+    },
+    "sentry-fix-issues": {
+      "source": "getsentry/sentry-agent-skills",
+      "sourceType": "github",
+      "computedHash": "5673b169d2a0eb6e4651a57eba4263d1c04dce10e2955c97902f1e9f80109a52"
+    },
+    "sql-optimization": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "47c930907f25d67454ac8c2d155785eae3dce72242960d0c0e9ebf2ced9cd231"
+    },
+    "xlsx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "efd0c8011cf0677d8075cf93867ecec804f9a8754a777e1d2fdb46197e9c247f"
+    }
+  }
+}

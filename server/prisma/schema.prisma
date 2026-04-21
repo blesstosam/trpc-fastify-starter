@@ -1,0 +1,70 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id       BigInt  @id @db.BigInt
+  username String  @db.VarChar(191)
+  fullName String? @map("full_name") @db.VarChar(191)
+  avatar   String? @db.VarChar(191)
+  password String  @db.VarChar(191)
+  state    Int     @default(1) @db.TinyInt
+
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+
+  filesCreated File[] @relation("FileCreatedBy")
+  filesUpdated File[] @relation("FileUpdatedBy")
+  filesOwned   File[] @relation("FileOwner")
+
+  tagsCreated Tag[] @relation("TagCreatedBy")
+  tagsUpdated Tag[] @relation("TagUpdatedBy")
+  tagsOwned   Tag[] @relation("TagOwner")
+
+  @@map("user")
+}
+
+model File {
+  id   BigInt @id @db.BigInt
+  key  String @unique @db.VarChar(255)
+  name String @db.VarChar(255)
+  size BigInt @db.BigInt
+  type String @db.VarChar(191)
+  url  String @db.VarChar(512)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+
+  createdBy     BigInt? @map("created_by")
+  createdByUser User?   @relation("FileCreatedBy", fields: [createdBy], references: [id])
+  updatedBy     BigInt? @map("updated_by")
+  updatedByUser User?   @relation("FileUpdatedBy", fields: [updatedBy], references: [id])
+  owner         BigInt? @map("owner")
+  ownerUser     User?   @relation("FileOwner", fields: [owner], references: [id])
+
+  @@map("file")
+}
+
+model Tag {
+  id          BigInt  @id @db.BigInt
+  name        String  @unique @db.VarChar(100)
+  description String? @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+
+  createdBy     BigInt? @map("created_by")
+  createdByUser User?   @relation("TagCreatedBy", fields: [createdBy], references: [id])
+  updatedBy     BigInt? @map("updated_by")
+  updatedByUser User?   @relation("TagUpdatedBy", fields: [updatedBy], references: [id])
+  owner         BigInt? @map("owner")
+  ownerUser     User?   @relation("TagOwner", fields: [owner], references: [id])
+
+  @@map("tag")
+}

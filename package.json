@@ -1,0 +1,42 @@
+{
+  "name": "trpc-demo",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "build:client": "pnpm --filter ./client build",
+    "build:server": "pnpm --filter ./server build",
+    "build": "run-s build:server build:client",
+    "dev:client": "pnpm --filter ./client dev",
+    "dev:server": "pnpm --filter ./server dev",
+    "dev": "run-p dev:*",
+    "start:client": "pnpm --filter ./client preview",
+    "start:server": "pnpm --filter ./server start",
+    "start": "run-p start:*",
+    "test:unit": "run-s test:unit:server test:unit:client",
+    "test:unit:server": "pnpm --filter ./server test:unit",
+    "test:unit:client": "pnpm --filter ./client test:unit",
+    "test:e2e:server": "pnpm --filter ./server test:e2e",
+    "test:e2e": "playwright test",
+    "lint": "eslint \"{server/src,client/src,test}/**/*.{js,ts,json,vue}\" --fix",
+    "postinstall": "npx simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^8.2.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.0",
+    "eslint": "^9.31.0",
+    "lint-staged": "^13.2.2",
+    "npm-run-all2": "^8.0.4",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "6.0.3",
+    "vitest": "^4.0.18",
+    "wait-port": "^1.0.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,vue}": "eslint --fix"
+  }
+}

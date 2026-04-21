@@ -1,0 +1,19 @@
+{
+  "project": "权限管理与组织架构模块联动改造",
+  "description": "基于 docs/permission-manage/design.md 与 docs/organization/design.md，在后端接口已具备前提下，完成接口覆盖检查、测试回归、前端实现与全链路质量收口",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "接口覆盖检查",
+      "description": "不新增接口实现，先核对需求所需接口是否已在现有 tRPC router 中完整提供",
+      "steps": [
+        "从 docs/permission-manage/design.md 与 docs/organization/design.md 提取全部功能点对应接口清单（按模块分组）",
+        "逐项对照 server/src/rpc/router 与相关模块路由定义，确认每个接口的存在性、入参语义与返回字段是否满足页面需求",
+        "输出接口覆盖检查结果：已具备/命名不一致但可用/缺失 三类，并附路由定位路径",
+        "若存在缺失或语义不满足项，仅记录 gap 清单与影响范围，不在本任务中新增接口实现",
+        "将覆盖检查结论沉淀为可复用检查记录，作为后续前端联调前置门禁"
+      ],
+      "passes": true
+    }
+  ]
+}

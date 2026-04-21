@@ -1,0 +1,11 @@
+/node_modules
+.vscode
+.claude
+.codex
+.cursor
+.github
+.git
+.gitignore
+*.md
+dist
+logs

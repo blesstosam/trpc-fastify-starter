@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>标签管理原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://api.iconify.design/lucide.css?icons=tag,plus,search,pencil,trash-2,x,triangle-alert"
+    />
+    <style>
+      :root {
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      body {
+        background: #f5f7fa;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-800">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <header class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">内容系统</p>
+            <h1 class="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-900">
+              <span class="icon--lucide icon--lucide--tag text-slate-600"></span>
+              标签管理
+            </h1>
+          </div>
+          <button
+            id="create-btn"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+          >
+            <span class="icon--lucide icon--lucide--plus"></span>
+            新建标签
+          </button>
+        </div>
+      </header>
+
+      <section class="mb-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <label class="relative flex-1">
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <span class="icon--lucide icon--lucide--search"></span>
+            </span>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="搜索标签名称"
+              class="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+          </label>
+          <button
+            id="search-btn"
+            class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-blue-500 hover:text-blue-600"
+          >
+            搜索
+          </button>
+          <button
+            id="reset-btn"
+            class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+          >
+            重置
+          </button>
+        </div>
+      </section>
+
+      <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">标签名称</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">描述</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">创建时间</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">操作</th>
+              </tr>
+            </thead>
+            <tbody id="tag-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="pointer-events-none fixed right-4 top-4 hidden rounded-lg px-4 py-2 text-sm font-medium text-white shadow-lg"></div>
+
+    <div id="tag-modal" class="fixed inset-0 z-20 hidden items-center justify-center bg-slate-900/40 p-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white p-5 shadow-xl">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 id="modal-title" class="text-lg font-semibold text-slate-900">新建标签</h2>
+          <button id="modal-close-btn" class="rounded-md p-1 text-slate-500 hover:bg-slate-100">
+            <span class="icon--lucide icon--lucide--x"></span>
+          </button>
+        </div>
+        <form id="tag-form" class="space-y-4">
+          <div>
+            <label for="tag-name" class="mb-1 block text-sm font-medium text-slate-700">标签名称 <span class="text-red-500">*</span></label>
+            <input
+              id="tag-name"
+              type="text"
+              maxlength="30"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="请输入标签名称"
+            />
+            <p id="tag-name-error" class="mt-1 hidden text-xs text-red-500">标签名称不能为空</p>
+          </div>
+          <div>
+            <label for="tag-desc" class="mb-1 block text-sm font-medium text-slate-700">标签描述</label>
+            <textarea
+              id="tag-desc"
+              rows="3"
+              maxlength="120"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="请输入标签描述（可选）"
+            ></textarea>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" id="cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:border-slate-400">取消</button>
+            <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="delete-modal" class="fixed inset-0 z-20 hidden items-center justify-center bg-slate-900/40 p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl">
+        <div class="mb-3 flex items-center gap-2 text-amber-600">
+          <span class="icon--lucide icon--lucide--triangle-alert"></span>
+          <h2 class="text-base font-semibold text-slate-900">确认删除</h2>
+        </div>
+        <p class="text-sm text-slate-600">删除后无法恢复，确认删除标签 <span id="delete-name" class="font-medium text-slate-900"></span> 吗？</p>
+        <div class="mt-5 flex justify-end gap-2">
+          <button id="delete-cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700">取消</button>
+          <button id="delete-confirm-btn" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">删除</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const state = {
+        keyword: '',
+        mode: 'create',
+        editingId: null,
+        deletingId: null,
+        tags: [
+          { id: 1, name: '技术', description: '技术相关文章', createdAt: '2026-02-21 10:20' },
+          { id: 2, name: '产品', description: '产品设计与分析', createdAt: '2026-02-22 16:45' },
+          { id: 3, name: '运营', description: '', createdAt: '2026-02-23 09:05' },
+        ],
+      }
+
+      const tableBody = document.getElementById('tag-table-body')
+      const searchInput = document.getElementById('search-input')
+      const tagModal = document.getElementById('tag-modal')
+      const deleteModal = document.getElementById('delete-modal')
+      const modalTitle = document.getElementById('modal-title')
+      const tagNameInput = document.getElementById('tag-name')
+      const tagDescInput = document.getElementById('tag-desc')
+      const tagNameError = document.getElementById('tag-name-error')
+      const deleteName = document.getElementById('delete-name')
+      const toast = document.getElementById('toast')
+
+      function showToast(message, type = 'success') {
+        toast.textContent = message
+        toast.className =
+          'pointer-events-none fixed right-4 top-4 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-lg'
+        toast.classList.add(type === 'success' ? 'bg-emerald-600' : 'bg-rose-600')
+        toast.classList.remove('hidden')
+        setTimeout(() => toast.classList.add('hidden'), 1800)
+      }
+
+      function getFilteredTags() {
+        const keyword = state.keyword.trim().toLowerCase()
+        if (!keyword)
+          return state.tags
+        return state.tags.filter(tag => tag.name.toLowerCase().includes(keyword))
+      }
+
+      function renderTable() {
+        const rows = getFilteredTags()
+        if (!rows.length) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="px-4 py-10 text-center text-sm text-slate-500">
+                暂无标签，请点击右上角“新建标签”
+              </td>
+            </tr>
+          `
+          return
+        }
+
+        tableBody.innerHTML = rows
+          .map(
+            tag => `
+              <tr>
+                <td class="px-4 py-3 text-sm font-medium text-slate-900">${tag.name}</td>
+                <td class="px-4 py-3 text-sm text-slate-600">${tag.description || '-'}</td>
+                <td class="px-4 py-3 text-sm text-slate-600">${tag.createdAt}</td>
+                <td class="px-4 py-3 text-right">
+                  <button data-action="edit" data-id="${tag.id}" class="mr-2 inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-blue-600 hover:bg-blue-50">
+                    <span class="icon--lucide icon--lucide--pencil"></span>编辑
+                  </button>
+                  <button data-action="delete" data-id="${tag.id}" class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-red-600 hover:bg-red-50">
+                    <span class="icon--lucide icon--lucide--trash-2"></span>删除
+                  </button>
+                </td>
+              </tr>
+            `,
+          )
+          .join('')
+      }
+
+      function openTagModal(mode, tag) {
+        state.mode = mode
+        state.editingId = mode === 'edit' ? tag.id : null
+        modalTitle.textContent = mode === 'edit' ? '编辑标签' : '新建标签'
+        tagNameInput.value = tag ? tag.name : ''
+        tagDescInput.value = tag ? tag.description : ''
+        tagNameError.classList.add('hidden')
+        tagModal.classList.remove('hidden')
+        tagModal.classList.add('flex')
+      }
+
+      function closeTagModal() {
+        tagModal.classList.add('hidden')
+        tagModal.classList.remove('flex')
+      }
+
+      function openDeleteModal(tag) {
+        state.deletingId = tag.id
+        deleteName.textContent = `「${tag.name}」`
+        deleteModal.classList.remove('hidden')
+        deleteModal.classList.add('flex')
+      }
+
+      function closeDeleteModal() {
+        state.deletingId = null
+        deleteModal.classList.add('hidden')
+        deleteModal.classList.remove('flex')
+      }
+
+      document.getElementById('create-btn').addEventListener('click', () => openTagModal('create'))
+      document.getElementById('search-btn').addEventListener('click', () => {
+        state.keyword = searchInput.value
+        renderTable()
+      })
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        searchInput.value = ''
+        state.keyword = ''
+        renderTable()
+      })
+      document.getElementById('modal-close-btn').addEventListener('click', closeTagModal)
+      document.getElementById('cancel-btn').addEventListener('click', closeTagModal)
+      document.getElementById('delete-cancel-btn').addEventListener('click', closeDeleteModal)
+
+      document.getElementById('tag-form').addEventListener('submit', (event) => {
+        event.preventDefault()
+        const name = tagNameInput.value.trim()
+        const description = tagDescInput.value.trim()
+
+        if (!name) {
+          tagNameError.classList.remove('hidden')
+          return
+        }
+
+        const duplicate = state.tags.find(
+          item => item.name === name && item.id !== state.editingId,
+        )
+        if (duplicate) {
+          showToast('标签名称重复，请更换名称', 'error')
+          return
+        }
+
+        if (state.mode === 'create') {
+          const now = new Date()
+          const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
+            now.getDate(),
+          ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(
+            now.getMinutes(),
+          ).padStart(2, '0')}`
+
+          state.tags.unshift({
+            id: Date.now(),
+            name,
+            description,
+            createdAt,
+          })
+          showToast('标签创建成功')
+        }
+        else {
+          const target = state.tags.find(item => item.id === state.editingId)
+          if (!target) {
+            showToast('标签不存在，列表已刷新', 'error')
+            renderTable()
+            closeTagModal()
+            return
+          }
+          target.name = name
+          target.description = description
+          showToast('标签更新成功')
+        }
+
+        renderTable()
+        closeTagModal()
+      })
+
+      tableBody.addEventListener('click', (event) => {
+        const button = event.target.closest('button')
+        if (!button)
+          return
+
+        const action = button.dataset.action
+        const id = Number(button.dataset.id)
+        const target = state.tags.find(item => item.id === id)
+        if (!target)
+          return
+
+        if (action === 'edit')
+          openTagModal('edit', target)
+        if (action === 'delete')
+          openDeleteModal(target)
+      })
+
+      document.getElementById('delete-confirm-btn').addEventListener('click', () => {
+        const idx = state.tags.findIndex(item => item.id === state.deletingId)
+        if (idx < 0) {
+          showToast('标签不存在，列表已刷新', 'error')
+          closeDeleteModal()
+          renderTable()
+          return
+        }
+        state.tags.splice(idx, 1)
+        showToast('标签删除成功')
+        closeDeleteModal()
+        renderTable()
+      })
+
+      renderTable()
+    </script>
+  </body>
+</html>

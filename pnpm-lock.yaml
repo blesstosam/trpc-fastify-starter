@@ -42,7 +42,7 @@ importers:
   client:
     dependencies:
       '@trpc/client':
-        specifier: ^11.9.0
+        specifier: ^11.10.0
         version: 11.10.0(@trpc/server@11.10.0(typescript@6.0.3))(typescript@6.0.3)
       ant-design-vue:
         specifier: ^4.2.6
@@ -139,7 +139,7 @@ importers:
         specifier: ^1.52.3
         version: 1.52.3
       '@trpc/server':
-        specifier: npm:@trpc/server
+        specifier: ^11.10.0
         version: 11.10.0(typescript@6.0.3)
       ali-oss:
         specifier: ^6.23.0
@@ -167,7 +167,7 @@ importers:
         version: 4.3.6
     devDependencies:
       '@trpc/client':
-        specifier: ^11.9.0
+        specifier: ^11.10.0
         version: 11.10.0(@trpc/server@11.10.0(typescript@6.0.3))(typescript@6.0.3)
       '@types/ali-oss':
         specifier: ^6.23.3
@@ -6204,8 +6204,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.56.1(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.56.1(typescript@6.0.3)
-      '@typescript-eslint/types': 8.56.1
+      '@typescript-eslint/tsconfig-utils': 8.58.2(typescript@6.0.3)
+      '@typescript-eslint/types': 8.58.2
       debug: 4.4.3
       typescript: 6.0.3
     transitivePeerDependencies:

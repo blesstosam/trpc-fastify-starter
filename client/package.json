@@ -1,5 +1,5 @@
 {
-  "name": "trpc-client",
+  "name": "trpc-demo-client",
   "type": "module",
   "version": "0.0.0",
   "private": true,
@@ -12,7 +12,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "@trpc/client": "^11.9.0",
+    "@trpc/client": "^11.10.0",
     "ant-design-vue": "^4.2.6",
     "dayjs": "^1.11.19",
     "nprogress": "^0.2.0",

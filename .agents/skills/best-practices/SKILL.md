@@ -33,6 +33,7 @@ metadata:
 ## 数据库模型设计
 - 使用schema.prisma定义数据库模型
 - 数据库字段使用下划线命名法，如`created_time`，映射到orm的字段要使用驼峰法，如`createdTime`
+- `schema.prisma` 里已定义的枚举，TypeScript 代码必须直接复用 Prisma 生成导出的 `const/type`（如 `server/src/generated/prisma/client` 或 `enums`），禁止在 TS 里重复定义同值常量或类型
 
 ## 坚持代码开发的fail-first原则
 - 遵循 fail-first（fail-fast）原则：在系统边界完成校验与归一化，在系统内部坚持类型/领域契约

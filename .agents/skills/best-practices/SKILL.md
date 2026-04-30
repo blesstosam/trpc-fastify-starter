@@ -29,6 +29,7 @@ metadata:
 - 开发后端的时候参考 `fastify-best-practices` skill
 - 后端接口返回的报错或提示信息使用中文
 - 查询数据时优先在数据库层完成筛选/聚合/分组/排序，避免在 JS 里做大规模数据组装和重计算
+- 后端 Schema / DTO 约定见 `references/backend-schema-dto.md`
 
 ## 数据库模型设计
 - 使用schema.prisma定义数据库模型
@@ -53,3 +54,4 @@ metadata:
 | 使用 Tailwind-first 原则 | 前端页面样式 Tailwind-first 约束与例外边界 | [tailwind-first](references/tailwind-first.md) |
 | 前端组件和逻辑拆分原则 | Vue3 SFC(Single File Component)拆分最佳实践 | [vue-sfc-split](references/vue-sfc-split.md) |
 | 后端事务与批量写入、性能优化 | 事务内避免耗时操作、批处理导入与连接池保护规范 | [backend-transaction-batch-write](references/backend-transaction-batch-write.md) |
+| 后端 Schema / DTO 约定 | 业务模块间 schema 复用、list schema、create schema、update schema 约定 | [backend-schema-dto](references/backend-schema-dto.md) |

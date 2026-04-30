@@ -50,7 +50,6 @@ function buildFetchUrl(key: string) {
 }
 
 function sanitizeFileName(filename: string) {
-  // eslint-disable-next-line e18e/prefer-static-regex
   return filename.replace(/[^\w.-]/g, '_')
 }
 
@@ -120,6 +119,8 @@ export async function listFiles(input: FileListInput) {
   return {
     items: items.map(serializeFile),
     total,
+    page,
+    pageSize,
   }
 }
 

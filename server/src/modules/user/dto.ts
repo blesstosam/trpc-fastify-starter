@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { createListQueryInputSchema, createPaginatedListOutputSchema, idSchema } from '../../lib/schemas'
 
 export const userOutputSchema = z.object({
   id: z.string(),
@@ -10,24 +11,13 @@ export const userOutputSchema = z.object({
   state: z.number().int(),
 })
 
-export const userListInputSchema = z
-  .object({
-    page: z.number().int().min(1).default(1),
-    pageSize: z.number().int().min(1).max(50).default(10),
-    keyword: z.string().trim().min(1).optional(),
-  })
-  .optional()
-
-export const userListOutputSchema = z.object({
-  items: z.array(userOutputSchema),
-  total: z.number().int(),
-  page: z.number().int(),
-  pageSize: z.number().int(),
+export const userListInputSchema = createListQueryInputSchema({
+  defaultPageSize: 10,
 })
 
-const userIdSchema = z.string().regex(/^\d+$/, { message: 'id must be a numeric string' })
+export const userListOutputSchema = createPaginatedListOutputSchema(userOutputSchema)
 
-export const userByIdInputSchema = z.object({ id: userIdSchema })
+export const userByIdInputSchema = z.object({ id: idSchema })
 
 export const createUserInputSchema = z.object({
   username: z.string().trim().min(1),
@@ -37,13 +27,8 @@ export const createUserInputSchema = z.object({
   state: z.number().int().min(0).max(1).optional(),
 })
 
-export const updateUserInputSchema = z.object({
-  id: userIdSchema,
-  username: z.string().trim().min(1).optional(),
-  fullName: z.string().trim().min(1).nullable().optional(),
-  avatar: z.string().trim().url().nullable().optional(),
-  password: z.string().min(6).optional(),
-  state: z.number().int().min(0).max(1).optional(),
+export const updateUserInputSchema = createUserInputSchema.partial().extend({
+  id: idSchema,
 })
 
 export const deleteUserOutputSchema = z.object({ success: z.literal(true) })

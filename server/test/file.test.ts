@@ -123,6 +123,8 @@ describe('file module tRPC integration', () => {
     const result = await trpcClient.file.list.query({ keyword: suffix })
 
     expect(result.total).toBeGreaterThanOrEqual(1)
+    expect(result.page).toBe(1)
+    expect(result.pageSize).toBe(20)
     expect(result.items.some(item => item.id === created.id)).toBe(true)
   })
 

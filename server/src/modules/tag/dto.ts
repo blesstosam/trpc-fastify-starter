@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { createListQueryInputSchema, createPaginatedListOutputSchema, idSchema } from '../../lib/schemas'
 
 export const tagSchema = z.object({
   id: z.string(),
@@ -11,30 +12,19 @@ export const tagSchema = z.object({
   updatedAt: z.date(),
 })
 
-export const tagListInputSchema = z
-  .object({
-    keyword: z.string().trim().min(1).optional(),
-  })
-  .optional()
+export const tagListInputSchema = createListQueryInputSchema()
 
-export const tagListOutputSchema = z.object({
-  items: z.array(tagSchema),
-  total: z.number().int(),
-})
+export const tagListOutputSchema = createPaginatedListOutputSchema(tagSchema)
 
-const tagIdSchema = z.string().regex(/^\d+$/, { message: 'id must be a numeric string' })
-
-export const tagByIdInputSchema = z.object({ id: tagIdSchema })
+export const tagByIdInputSchema = z.object({ id: idSchema })
 
 export const createTagInputSchema = z.object({
   name: z.string().trim().min(1, '标签名称不能为空').max(30, '标签名称不能超过 30 个字符'),
   description: z.string().trim().max(120, '描述不能超过 120 个字符').optional(),
 })
 
-export const updateTagInputSchema = z.object({
-  id: tagIdSchema,
-  name: z.string().trim().min(1, '标签名称不能为空').max(30, '标签名称不能超过 30 个字符'),
-  description: z.string().trim().max(120, '描述不能超过 120 个字符').optional(),
+export const updateTagInputSchema = createTagInputSchema.partial().extend({
+  id: idSchema,
 })
 
 export const deleteTagOutputSchema = z.object({ success: z.literal(true) })

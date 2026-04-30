@@ -57,6 +57,8 @@ async function assertTagNameAvailable(name: string, currentId?: string) {
 }
 
 export async function listTags(input: TagListInput) {
+  const page = input?.page ?? 1
+  const pageSize = input?.pageSize ?? 20
   const keyword = input?.keyword
   const where = keyword
     ? { name: { contains: keyword } }
@@ -66,12 +68,19 @@ export async function listTags(input: TagListInput) {
     prisma.tag.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       select: tagSelect,
     }),
     prisma.tag.count({ where }),
   ])
 
-  return { items: items.map(serializeTag), total }
+  return {
+    items: items.map(serializeTag),
+    total,
+    page,
+    pageSize,
+  }
 }
 
 export async function getTagById(id: string) {
@@ -110,9 +119,11 @@ export async function createTag(input: CreateTagInput, operatorId: string) {
 }
 
 export async function updateTag(input: UpdateTagInput, operatorId: string) {
-  await getTagById(input.id)
-  const name = input.name.trim()
-  const description = input.description?.trim() ?? ''
+  const existingTag = await getTagById(input.id)
+  const name = input.name?.trim() ?? existingTag.name
+  const description = input.description === undefined
+    ? (existingTag.description ?? '')
+    : input.description.trim()
   const operator = toSnowflakeId(operatorId)
 
   await assertTagNameAvailable(name, input.id)

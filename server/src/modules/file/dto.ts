@@ -1,4 +1,5 @@
 import z from 'zod'
+import { createListQueryInputSchema, createPaginatedListOutputSchema } from '../../lib/schemas'
 
 export const fileSchema = z.object({
   id: z.string(),
@@ -14,33 +15,29 @@ export const fileSchema = z.object({
   updatedAt: z.date(),
 })
 
-export const fileListInputSchema = z.object({
-  page: z.number().int().min(1).default(1),
-  pageSize: z.number().int().min(1).max(100).default(20),
-  keyword: z.string().trim().min(1).optional(),
-}).optional()
+export const fileListInputSchema = createListQueryInputSchema()
 
-export const fileListOutputSchema = z.object({
-  items: z.array(fileSchema),
-  total: z.number().int(),
-})
+export const fileListOutputSchema = createPaginatedListOutputSchema(fileSchema)
 
 const fileKeySchema = z.string().trim().min(1, 'key 不能为空')
+const persistedFileKeySchema = fileKeySchema.max(255, 'key 长度不能超过 255')
+const fileNameSchema = z.string().trim().min(1, '文件名不能为空').max(255, '文件名长度不能超过 255')
+const fileTypeSchema = z.string().trim().min(1, '文件类型不能为空').max(191, '文件类型长度不能超过 191')
 
 export const createFileInputSchema = z.object({
-  name: z.string().trim().min(1, '文件名不能为空').max(255, '文件名长度不能超过 255'),
-  type: z.string().trim().min(1, '文件类型不能为空').max(191, '文件类型长度不能超过 191'),
+  name: fileNameSchema,
+  type: fileTypeSchema,
   contentBase64: z.string().trim().min(1, '文件内容不能为空'),
-  key: fileKeySchema.max(255, 'key 长度不能超过 255').optional(),
+  key: persistedFileKeySchema.optional(),
 })
 
 export const addFileInputSchema = z.object({
-  key: fileKeySchema.max(255, 'key 长度不能超过 255'),
-  name: z.string().trim().min(1, '文件名不能为空').max(255, '文件名长度不能超过 255'),
+  key: persistedFileKeySchema,
+  name: fileNameSchema,
 })
 
 export const fileSignedUrlInputSchema = z.object({
-  key: fileKeySchema,
+  key: persistedFileKeySchema,
   expires: z.number().int().min(1).max(60 * 60 * 24 * 7).optional(),
 })
 

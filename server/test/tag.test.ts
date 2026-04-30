@@ -133,10 +133,14 @@ describe('server app tRPC integration', () => {
     const createdTag = await createTagForTest(suffix)
 
     const result = await trpcClient.tags.list.query({
+      page: 1,
+      pageSize: 20,
       keyword: suffix,
     })
 
     expect(result.total).toBeGreaterThanOrEqual(1)
+    expect(result.page).toBe(1)
+    expect(result.pageSize).toBe(20)
     expect(result.items.some(item => item.id === createdTag.id)).toBe(true)
   })
 

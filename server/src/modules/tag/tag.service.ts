@@ -3,24 +3,44 @@ import { TRPCError } from '@trpc/server'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
 
+const userSelect = {
+  id: true,
+  username: true,
+  fullName: true,
+  avatar: true,
+  createdAt: true,
+  updatedAt: true,
+  state: true,
+} as const
+
 const tagSelect = {
   id: true,
   name: true,
   description: true,
-  createdBy: true,
-  updatedBy: true,
-  owner: true,
+  createdByUser: { select: userSelect },
+  updatedByUser: { select: userSelect },
+  ownerUser: { select: userSelect },
   createdAt: true,
   updatedAt: true,
 } as const
+
+interface UserRow {
+  id: bigint
+  username: string
+  fullName: string | null
+  avatar: string | null
+  createdAt: Date
+  updatedAt: Date
+  state: number
+}
 
 interface TagRow {
   id: bigint
   name: string
   description: string | null
-  createdBy: bigint | null
-  updatedBy: bigint | null
-  owner: bigint | null
+  createdByUser: UserRow | null
+  updatedByUser: UserRow | null
+  ownerUser: UserRow | null
   createdAt: Date
   updatedAt: Date
 }
@@ -29,13 +49,25 @@ function toSnowflakeId(id: string) {
   return BigInt(id)
 }
 
+function serializeUser(user: UserRow | null) {
+  if (!user)
+    return null
+  return {
+    ...user,
+    id: user.id.toString(),
+  }
+}
+
 function serializeTag(tag: TagRow) {
   return {
-    ...tag,
     id: tag.id.toString(),
-    createdBy: tag.createdBy?.toString() ?? null,
-    updatedBy: tag.updatedBy?.toString() ?? null,
-    owner: tag.owner?.toString() ?? null,
+    name: tag.name,
+    description: tag.description,
+    createdBy: serializeUser(tag.createdByUser),
+    updatedBy: serializeUser(tag.updatedByUser),
+    owner: serializeUser(tag.ownerUser),
+    createdAt: tag.createdAt,
+    updatedAt: tag.updatedAt,
   }
 }
 

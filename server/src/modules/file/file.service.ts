@@ -6,6 +6,16 @@ import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
 import { getStorageProvider } from './storage'
 
+const userSelect = {
+  id: true,
+  username: true,
+  fullName: true,
+  avatar: true,
+  createdAt: true,
+  updatedAt: true,
+  state: true,
+} as const
+
 const fileSelect = {
   id: true,
   key: true,
@@ -13,12 +23,22 @@ const fileSelect = {
   size: true,
   type: true,
   url: true,
-  createdBy: true,
-  updatedBy: true,
-  owner: true,
+  createdByUser: { select: userSelect },
+  updatedByUser: { select: userSelect },
+  ownerUser: { select: userSelect },
   createdAt: true,
   updatedAt: true,
 } as const
+
+interface UserRow {
+  id: bigint
+  username: string
+  fullName: string | null
+  avatar: string | null
+  createdAt: Date
+  updatedAt: Date
+  state: number
+}
 
 interface FileRow {
   id: bigint
@@ -27,21 +47,35 @@ interface FileRow {
   size: bigint
   type: string
   url: string
-  createdBy: bigint | null
-  updatedBy: bigint | null
-  owner: bigint | null
+  createdByUser: UserRow | null
+  updatedByUser: UserRow | null
+  ownerUser: UserRow | null
   createdAt: Date
   updatedAt: Date
 }
 
+function serializeUser(user: UserRow | null) {
+  if (!user)
+    return null
+  return {
+    ...user,
+    id: user.id.toString(),
+  }
+}
+
 function serializeFile(file: FileRow) {
   return {
-    ...file,
     id: file.id.toString(),
+    key: file.key,
+    name: file.name,
     size: file.size.toString(),
-    createdBy: file.createdBy?.toString() ?? null,
-    updatedBy: file.updatedBy?.toString() ?? null,
-    owner: file.owner?.toString() ?? null,
+    type: file.type,
+    url: file.url,
+    createdBy: serializeUser(file.createdByUser),
+    updatedBy: serializeUser(file.updatedByUser),
+    owner: serializeUser(file.ownerUser),
+    createdAt: file.createdAt,
+    updatedAt: file.updatedAt,
   }
 }
 

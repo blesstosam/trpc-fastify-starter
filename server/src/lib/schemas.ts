@@ -12,6 +12,16 @@ export const optionalBigIntIdSchema = bigIntIdSchema.optional()
 
 export const optionalNullableBigIntIdSchema = bigIntIdSchema.optional().nullable()
 
+export function createAuditFields(userSchema: z.ZodTypeAny) {
+  return {
+    createdBy: userSchema.nullable(),
+    updatedBy: userSchema.nullable(),
+    owner: userSchema.nullable(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+  }
+}
+
 export const countOutputSchema = z.object({ count: z.number().int() })
 
 // 分页相关

@@ -1,5 +1,6 @@
 import z from 'zod'
-import { createListQueryInputSchema, createPaginatedListOutputSchema } from '../../lib/schemas'
+import { createAuditFields, createListQueryInputSchema, createPaginatedListOutputSchema } from '../../lib/schemas'
+import { userOutputSchema } from '../user/dto'
 
 export const fileSchema = z.object({
   id: z.string(),
@@ -8,11 +9,7 @@ export const fileSchema = z.object({
   size: z.string(),
   type: z.string(),
   url: z.string(),
-  createdBy: z.string().nullable(),
-  updatedBy: z.string().nullable(),
-  owner: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  ...createAuditFields(userOutputSchema),
 })
 
 export const fileListInputSchema = createListQueryInputSchema()

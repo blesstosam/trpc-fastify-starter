@@ -110,9 +110,9 @@ describe('server app tRPC integration', () => {
     expect(createdTag.name).toBe(payload.name)
     expect(createdTag.description).toBe(payload.description)
     expect(createdTag.id).toBeTypeOf('string')
-    expect(createdTag.createdBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(createdTag.updatedBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(createdTag.owner).toBe(createdAuthUserId?.toString() ?? null)
+    expect(createdTag.createdBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(createdTag.updatedBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(createdTag.owner?.id).toBe(createdAuthUserId?.toString() ?? null)
 
     const persisted = await prisma.tag.findUnique({
       where: {
@@ -153,9 +153,9 @@ describe('server app tRPC integration', () => {
     expect(result.id).toBe(createdTag.id)
     expect(result.name).toBe(createdTag.name)
     expect(result.description).toBe(createdTag.description)
-    expect(result.createdBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(result.updatedBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(result.owner).toBe(createdAuthUserId?.toString() ?? null)
+    expect(result.createdBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(result.updatedBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(result.owner?.id).toBe(createdAuthUserId?.toString() ?? null)
     expect(result.createdAt).toBeInstanceOf(Date)
     expect(result.updatedAt).toBeInstanceOf(Date)
   })

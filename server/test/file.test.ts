@@ -104,9 +104,9 @@ describe('file module tRPC integration', () => {
     expect(created.type).toBe('text/plain')
     expect(created.size).toBe(String(content.byteLength))
     expect(created.url).toContain('/file/fetch/')
-    expect(created.createdBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(created.updatedBy).toBe(createdAuthUserId?.toString() ?? null)
-    expect(created.owner).toBe(createdAuthUserId?.toString() ?? null)
+    expect(created.createdBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(created.updatedBy?.id).toBe(createdAuthUserId?.toString() ?? null)
+    expect(created.owner?.id).toBe(createdAuthUserId?.toString() ?? null)
 
     const persisted = await prisma.file.findUnique({ where: { id: BigInt(created.id) } })
     expect(persisted).not.toBeNull()
@@ -151,7 +151,7 @@ describe('file module tRPC integration', () => {
     createdFileIds.push(added.id)
     expect(added.key).toBe(key)
     expect(Number(added.size)).toBeGreaterThan(0)
-    expect(added.createdBy).toBe(createdAuthUserId?.toString() ?? null)
+    expect(added.createdBy?.id).toBe(createdAuthUserId?.toString() ?? null)
   })
 })
 

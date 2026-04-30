@@ -1,15 +1,12 @@
 import { z } from 'zod'
-import { createListQueryInputSchema, createPaginatedListOutputSchema, idSchema } from '../../lib/schemas'
+import { createAuditFields, createListQueryInputSchema, createPaginatedListOutputSchema, idSchema } from '../../lib/schemas'
+import { userOutputSchema } from '../user/dto'
 
 export const tagSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable(),
-  createdBy: z.string().nullable(),
-  updatedBy: z.string().nullable(),
-  owner: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  ...createAuditFields(userOutputSchema),
 })
 
 export const tagListInputSchema = createListQueryInputSchema()

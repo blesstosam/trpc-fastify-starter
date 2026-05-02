@@ -5,7 +5,6 @@ description: 当设计或重构后端模块的 Schema / DTO、复用跨模块字
 
 - 业务模块自己的 canonical schema 由该业务模块维护，其他模块只做复用，不要跨模块再手写一份相同字段的 `z.object(...)`
 - 业务模块之间复用 DTO 时，优先 `import` 后使用 `pick / omit / extend`
-- 如果调用侧必须保留兼容键名，不要为了复用强改输出契约；优先复用字段校验本身，例如使用 `schema.shape.xxx` 组装新 schema。参考 `server/src/modules/dormitory-resource/dtos/bed.dto.ts` 对 `simpleStudentSchema.shape.studentNo` 的复用，但外部仍保持 `studentId`
 - 真正无业务语义的基础 schema 放在 `server/src/lib/schemas.ts`，例如 `idSchema`、`countOutputSchema`、`createPaginatedListOutputSchema(...)`；有业务语义的 schema 继续放在所属模块
 - 一个实体同时存在“轻量输出”和“完整输出”时，优先拆成 `simpleXxxSchema` 和 `xxxSchema` 两层。`simpleStudentSchema` 只保留稳定公共字段，`studentSchema` 在其上扩展完整详情字段
 - `xxxListInputSchema` 负责承载分页参数和筛选条件；如果一个模块只有单个列表接口，可以直接内联 `page / pageSize`。如果一个模块有多个列表接口复用同一套分页输入，再考虑在模块内定义局部 `paginationInputSchema`

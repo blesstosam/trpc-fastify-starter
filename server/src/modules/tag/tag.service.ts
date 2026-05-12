@@ -89,8 +89,8 @@ async function assertTagNameAvailable(name: string, currentId?: string) {
 }
 
 export async function listTags(input: TagListInput) {
-  const page = input?.page ?? 1
-  const pageSize = input?.pageSize ?? 20
+  const page = input.page
+  const pageSize = input.pageSize
   const keyword = input?.keyword
   const where = keyword
     ? { name: { contains: keyword } }
@@ -100,7 +100,7 @@ export async function listTags(input: TagListInput) {
     prisma.tag.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * pageSize,
+      skip: input.skip,
       take: pageSize,
       select: tagSelect,
     }),

@@ -127,8 +127,8 @@ async function createFileRecord(input: {
 }
 
 export async function listFiles(input: FileListInput) {
-  const page = input?.page ?? 1
-  const pageSize = input?.pageSize ?? 20
+  const page = input.page
+  const pageSize = input.pageSize
   const keyword = input?.keyword?.trim()
   const where = keyword
     ? {
@@ -143,7 +143,7 @@ export async function listFiles(input: FileListInput) {
     prisma.file.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * pageSize,
+      skip: input.skip,
       take: pageSize,
       select: fileSelect,
     }),

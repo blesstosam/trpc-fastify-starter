@@ -33,8 +33,8 @@ function serializeUser(user: UserRow) {
 }
 
 export async function listUsers(input: UserListInput) {
-  const page = input?.page ?? 1
-  const pageSize = input?.pageSize ?? 10
+  const page = input.page
+  const pageSize = input.pageSize
   const keyword = input?.keyword
   const where = keyword
     ? {
@@ -45,7 +45,7 @@ export async function listUsers(input: UserListInput) {
   const [items, total] = await prisma.$transaction([
     prisma.user.findMany({
       where,
-      skip: (page - 1) * pageSize,
+      skip: input.skip,
       take: pageSize,
       orderBy: { id: 'desc' },
       select: userSelect,

@@ -48,5 +48,8 @@ export function createListQueryInputSchema(options?: {
     page: z.number().int().min(1).default(1),
     pageSize: z.number().int().min(1).max(maxPageSize).default(defaultPageSize),
     keyword: z.string().trim().min(1).optional(),
-  }).optional()
+  }).prefault({}).transform(data => ({
+    ...data,
+    skip: (data.page - 1) * data.pageSize,
+  }))
 }

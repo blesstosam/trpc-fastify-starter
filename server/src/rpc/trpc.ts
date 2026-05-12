@@ -16,16 +16,31 @@ const t = initTRPC.context<Context>().meta<OpenApiMetaWithoutMethodAndPath>().cr
 
 export const router = t.router
 
+const trpcTransportQueryKeys = new Set([
+  'batch',
+  'input',
+])
+
 /**
  * 兼容openapi，构造input对象
  */
 const openApiQueryInputCompat = t.middleware(async ({ ctx, input, type, next }) => {
-  if (type === 'query' && input === undefined) {
-    const query = ctx.req.query as Record<string, unknown> | undefined
-    if (query && Object.keys(query).length > 0) {
-      return next({ input: query })
-    }
+  if (type !== 'query' || input !== undefined) {
+    return next()
   }
+
+  const query = ctx.req.query as Record<string, unknown> | undefined
+  if (!query) {
+    return next()
+  }
+
+  const compatQuery = Object.fromEntries(
+    Object.entries(query).filter(([key]) => !trpcTransportQueryKeys.has(key)),
+  )
+  if (Object.keys(compatQuery).length > 0) {
+    return next({ input: compatQuery })
+  }
+
   return next()
 })
 

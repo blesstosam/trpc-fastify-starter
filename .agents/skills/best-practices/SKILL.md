@@ -23,6 +23,7 @@ metadata:
 - 如果要使用`ant-design-vue`里的组件，需要显示的引入，如`import { Avatar } from 'ant-design-vue'`
 - 完成一个页面页面后，使用 `critique` skill 对刚实现的页面进行一次评估，如果有优化的地方根据优化点修复一版（只做一轮修复）
 - 使用Vue3写前端逻辑的流程建议：先使用composables函数写数据逻辑，再写前端模板表达UI，最后组件引入composables函数把数据绑定到模板视图，组件里尽量不要处理业务逻辑
+- 已经封装了一些业务组件，组件定义参考 `vben-components` skill，优先使用这些组件实现对应的功能场景（如列表页、详情页、文件上传、时间轴等），禁止在不使用组件的情况下直接使用`ant-design-vue`的基础组件（如`<a-table>`、`<a-modal>`、`<a-upload>`等）
 - 后端返回的时间为UTC时间，必须统一显示为东八区`YYYY-MM-DD HH:mm:ss`格式，禁止直接渲染`toISOString()`这类包含`T`/`Z`的UTC原始串
 
 ## 后端开发参考
@@ -30,17 +31,27 @@ metadata:
 - 后端接口返回的报错或提示信息使用中文
 - 查询数据时优先在数据库层完成筛选/聚合/分组/排序，避免在 JS 里做大规模数据组装和重计算
 - 后端 Schema / DTO 约定见 `references/backend-schema-dto.md`
+- 后端 service 层 Prisma 查询参数 / serializer / create-update data 形状约定见 `references/backend-service-data-shape.md`
+- 数据库模型设计
+  - 使用schema.prisma定义数据库模型
+  - 数据库字段使用下划线命名法，如`created_time`，映射到orm的字段要使用驼峰法，如`createdTime`
+  - `schema.prisma` 里已定义的枚举，TypeScript 代码必须直接复用 Prisma 生成导出的 `const/type`（如 `server/src/generated/prisma/client` 或 `enums`），禁止在 TS 里重复定义同值常量或类型
+  - 对数据库字段或业务契约里已经稳定的值集合（如 `status`、`type`、`scene`、`mode`、`algorithmKey`），若当前 Prisma schema 还没有对应 enum，必须先收回到所属模块内的共享常量、共享类型和共享 schema helper，禁止在 router、service、DTO、SQL 片段里散落重复字面量
+  - 共享值集合按领域模块维护，优先放在各模块自己的 `shared/constants`、`dto` helper 或同目录共享文件中；禁止建立跨模块、无业务语义的大杂烩枚举文件，也不要因为字符串值偶然相同就复用不属于该字段的 Prisma enum
+- 后端 Router / Service 边界
+  - tRPC router 只负责 procedure 声明与组合：定义 `meta/openapi`、`input/output schema`
+  - router 中禁止内联复杂业务逻辑、权限细节、SQL、聚合统计、结果映射；出现超过少量参数整理的一段逻辑时，优先下沉到 service
+  - service 返回值以“对外契约稳定”为目标：字段含义、空值语义、分页/统计口径保持不变；重构时优先移动实现，不要顺手改变 RPC contract
+- 禁止在数据库写操作前做冗余的”先查再验”前置校验：当 `updateMany` / `deleteMany` 的 WHERE 条件已经内聚了所有业务约束（状态、类型、权限范围等）时，不要再额外执行 `findMany` + JS 侧逐条校验来”预先筛出不合规记录”。数据库 WHERE 本身就是最准确的过滤器，重复校验徒增查询次数、拉低批量操作吞吐，且无法消除并发竞争（WHERE 才是原子保证）。仅在需要向调用方逐条报告差异化失败原因时才考虑查询校验，否则直接用 `updateMany` 的 `count` 作为成功数即可
+- 禁止对 bigint 做 `toString()` + `BigInt()` 往返转换来给 `Set` 去重。`Set<bigint>` 原生支持 bigint 相等性比较（`1n === 1n` 为 `true`），`Array.from(new Set(ids))` 即可去重，无需 `Array.from(new Set(ids.map(id => id.toString()))).map(id => BigInt(id))`
 
-## 数据库模型设计
-- 使用schema.prisma定义数据库模型
-- 数据库字段使用下划线命名法，如`created_time`，映射到orm的字段要使用驼峰法，如`createdTime`
-- `schema.prisma` 里已定义的枚举，TypeScript 代码必须直接复用 Prisma 生成导出的 `const/type`（如 `server/src/generated/prisma/client` 或 `enums`），禁止在 TS 里重复定义同值常量或类型
 
 ## 坚持代码开发的fail-first原则
 - 遵循 fail-first（fail-fast）原则：在系统边界完成校验与归一化，在系统内部坚持类型/领域契约
 - 输入边界（如 HTTP/tRPC 入参、第三方回调、用户输入）统一校验一次，避免内部层层重复兜底
 - 当契约被破坏时要主动抛出异常，交由上层统一决策（返回错误、告警、回滚、降级）
 - 禁止“吞错式健壮性”：不要用静默修复掩盖上游错误（例如“参数类型是数组还去判断是否是数组并将非数组处理成数组”）
+
 
 ---
 
@@ -55,3 +66,4 @@ metadata:
 | 前端组件和逻辑拆分原则 | Vue3 SFC(Single File Component)拆分最佳实践 | [vue-sfc-split](references/vue-sfc-split.md) |
 | 后端事务与批量写入、性能优化 | 事务内避免耗时操作、批处理导入与连接池保护规范 | [backend-transaction-batch-write](references/backend-transaction-batch-write.md) |
 | 后端 Schema / DTO 约定 | 业务模块间 schema 复用、list schema、create schema、update schema 约定 | [backend-schema-dto](references/backend-schema-dto.md) |
+| 后端 service Prisma 数据形状 | 用 Prisma args/GetPayload 推导 serializer 类型、rest spread 写 create/update data、消除字段清单重复 | [backend-service-data-shape](references/backend-service-data-shape.md) |

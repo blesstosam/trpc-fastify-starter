@@ -3,34 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { hashPassword } from '../../lib/auth'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
-
-const userSelect = {
-  id: true,
-  username: true,
-  fullName: true,
-  avatar: true,
-  createdAt: true,
-  updatedAt: true,
-  state: true,
-} as const
-
-interface UserRow {
-  id: bigint
-  username: string
-  fullName: string | null
-  avatar: string | null
-  createdAt: Date
-  updatedAt: Date
-  state: number
-}
-
-function toSnowflakeId(id: string) {
-  return BigInt(id)
-}
-
-function serializeUser(user: UserRow) {
-  return { ...user, id: user.id.toString() }
-}
+import { serializeUser } from './dto'
 
 export async function listUsers(input: UserListInput) {
   const page = input.page
@@ -48,7 +21,6 @@ export async function listUsers(input: UserListInput) {
       skip: input.skip,
       take: pageSize,
       orderBy: { id: 'desc' },
-      select: userSelect,
     }),
     prisma.user.count({ where }),
   ])
@@ -58,50 +30,43 @@ export async function listUsers(input: UserListInput) {
 
 export async function getUserById(id: string) {
   const user = await prisma.user.findUnique({
-    where: { id: toSnowflakeId(id) },
-    select: userSelect,
+    where: { id: BigInt(id) },
   })
 
   if (!user) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
+    throw new TRPCError({ code: 'NOT_FOUND', message: '用户不存在' })
   }
   return serializeUser(user)
 }
 
 export async function createUser(input: CreateUserInput) {
-  const passwordHash = await hashPassword(input.password)
+  const { password, ...data } = input
+  const passwordHash = await hashPassword(password)
   const user = await prisma.user.create({
     data: {
+      ...data,
       id: nextSnowflakeId(),
-      username: input.username,
-      fullName: input.fullName ?? null,
-      avatar: input.avatar ?? null,
       password: passwordHash,
-      state: input.state ?? 1,
     },
-    select: userSelect,
   })
   return serializeUser(user)
 }
 
 export async function updateUser(input: UpdateUserInput) {
-  await getUserById(input.id)
-  const { id, ...rest } = input
-  const passwordHash = rest.password ? await hashPassword(rest.password) : null
+  const { id, password, ...data } = input
+  const passwordHash = password ? await hashPassword(password) : undefined
 
   const user = await prisma.user.update({
-    where: { id: toSnowflakeId(id) },
+    where: { id: BigInt(id) },
     data: {
-      ...rest,
+      ...data,
       ...(passwordHash ? { password: passwordHash } : {}),
     },
-    select: userSelect,
   })
   return serializeUser(user)
 }
 
 export async function deleteUser(id: string) {
-  await getUserById(id)
-  await prisma.user.delete({ where: { id: toSnowflakeId(id) } })
+  await prisma.user.delete({ where: { id: BigInt(id) } })
   return { success: true as const }
 }

@@ -1,69 +1,24 @@
+import type { FileDefaultArgs, FileGetPayload } from '../../generated/prisma/models/File'
 import type { AddFileInput, CreateFileInput, FileListInput, FileSignedUrlInput } from './dto'
 import { Buffer } from 'node:buffer'
 import { randomUUID } from 'node:crypto'
 import { TRPCError } from '@trpc/server'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
+import { serializeUser } from '../user/dto'
 import { getStorageProvider } from './storage'
 
-const userSelect = {
-  id: true,
-  username: true,
-  fullName: true,
-  avatar: true,
-  createdAt: true,
-  updatedAt: true,
-  state: true,
-} as const
+const fileArgs = {
+  include: {
+    createdByUser: true,
+    updatedByUser: true,
+    ownerUser: true,
+  },
+} satisfies FileDefaultArgs
 
-const fileSelect = {
-  id: true,
-  key: true,
-  name: true,
-  size: true,
-  type: true,
-  url: true,
-  createdByUser: { select: userSelect },
-  updatedByUser: { select: userSelect },
-  ownerUser: { select: userSelect },
-  createdAt: true,
-  updatedAt: true,
-} as const
+type FilePayload = FileGetPayload<typeof fileArgs>
 
-interface UserRow {
-  id: bigint
-  username: string
-  fullName: string | null
-  avatar: string | null
-  createdAt: Date
-  updatedAt: Date
-  state: number
-}
-
-interface FileRow {
-  id: bigint
-  key: string
-  name: string
-  size: bigint
-  type: string
-  url: string
-  createdByUser: UserRow | null
-  updatedByUser: UserRow | null
-  ownerUser: UserRow | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-function serializeUser(user: UserRow | null) {
-  if (!user)
-    return null
-  return {
-    ...user,
-    id: user.id.toString(),
-  }
-}
-
-function serializeFile(file: FileRow) {
+function serializeFile(file: FilePayload) {
   return {
     id: file.id.toString(),
     key: file.key,
@@ -71,11 +26,11 @@ function serializeFile(file: FileRow) {
     size: file.size.toString(),
     type: file.type,
     url: file.url,
+    createdAt: file.createdAt,
+    updatedAt: file.updatedAt,
     createdBy: serializeUser(file.createdByUser),
     updatedBy: serializeUser(file.updatedByUser),
     owner: serializeUser(file.ownerUser),
-    createdAt: file.createdAt,
-    updatedAt: file.updatedAt,
   }
 }
 
@@ -119,7 +74,7 @@ async function createFileRecord(input: {
       updatedBy: operator,
       owner: operator,
     },
-    select: fileSelect,
+    ...fileArgs,
   })
 
   return serializeFile(file)
@@ -128,7 +83,7 @@ async function createFileRecord(input: {
 export async function listFiles(input: FileListInput) {
   const page = input.page
   const pageSize = input.pageSize
-  const keyword = input?.keyword?.trim()
+  const keyword = input?.keyword
   const where = keyword
     ? {
         OR: [
@@ -144,7 +99,7 @@ export async function listFiles(input: FileListInput) {
       orderBy: { createdAt: 'desc' },
       skip: input.skip,
       take: pageSize,
-      select: fileSelect,
+      ...fileArgs,
     }),
     prisma.file.count({ where }),
   ])
@@ -161,32 +116,32 @@ export async function createFile(input: CreateFileInput, operatorId: string) {
   const storage = getStorageProvider()
   await storage.ensureBucket()
 
-  const key = input.key?.trim() || `${randomUUID()}_${sanitizeFileName(input.name)}`
+  const key = input.key || `${randomUUID()}_${sanitizeFileName(input.name)}`
   const body = decodeBase64(input.contentBase64)
 
   await storage.putObject(key, body)
 
   return createFileRecord({
     key,
-    name: input.name.trim(),
-    type: input.type.trim(),
+    name: input.name,
+    type: input.type,
     size: BigInt(body.byteLength),
     operatorId,
   })
 }
 
 export async function addFile(input: AddFileInput, operatorId: string) {
-  const key = input.key.trim()
+  const key = input.key
   const storage = getStorageProvider()
   const metadata = await storage.getObjectMeta(key).catch(() => null)
 
   if (!metadata) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: `Could not find file ${key}.` })
+    throw new TRPCError({ code: 'NOT_FOUND', message: `文件 ${key} 不存在` })
   }
 
   return createFileRecord({
     key,
-    name: input.name.trim(),
+    name: input.name,
     type: metadata.type,
     size: metadata.size,
     operatorId,
@@ -200,7 +155,7 @@ export async function getSignedUrl(input: FileSignedUrlInput) {
   })
 
   if (!file) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: `Could not find file ${input.key}.` })
+    throw new TRPCError({ code: 'NOT_FOUND', message: `文件 ${input.key} 不存在` })
   }
 
   const storage = getStorageProvider()
@@ -225,7 +180,7 @@ export async function getFileStreamByKey(key: string) {
   })
 
   if (!file) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: `Could not find file ${key}.` })
+    throw new TRPCError({ code: 'NOT_FOUND', message: `文件 ${key} 不存在` })
   }
 
   const storage = getStorageProvider()

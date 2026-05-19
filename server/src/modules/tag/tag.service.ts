@@ -1,73 +1,30 @@
+import type { TagDefaultArgs, TagGetPayload } from '../../generated/prisma/models/Tag'
 import type { CreateTagInput, TagListInput, UpdateTagInput } from './dto'
 import { TRPCError } from '@trpc/server'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
+import { serializeUser } from '../user/dto'
 
-const userSelect = {
-  id: true,
-  username: true,
-  fullName: true,
-  avatar: true,
-  createdAt: true,
-  updatedAt: true,
-  state: true,
-} as const
+const tagArgs = {
+  include: {
+    createdByUser: true,
+    updatedByUser: true,
+    ownerUser: true,
+  },
+} satisfies TagDefaultArgs
 
-const tagSelect = {
-  id: true,
-  name: true,
-  description: true,
-  createdByUser: { select: userSelect },
-  updatedByUser: { select: userSelect },
-  ownerUser: { select: userSelect },
-  createdAt: true,
-  updatedAt: true,
-} as const
+type TagPayload = TagGetPayload<typeof tagArgs>
 
-interface UserRow {
-  id: bigint
-  username: string
-  fullName: string | null
-  avatar: string | null
-  createdAt: Date
-  updatedAt: Date
-  state: number
-}
-
-interface TagRow {
-  id: bigint
-  name: string
-  description: string | null
-  createdByUser: UserRow | null
-  updatedByUser: UserRow | null
-  ownerUser: UserRow | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-function toSnowflakeId(id: string) {
-  return BigInt(id)
-}
-
-function serializeUser(user: UserRow | null) {
-  if (!user)
-    return null
-  return {
-    ...user,
-    id: user.id.toString(),
-  }
-}
-
-function serializeTag(tag: TagRow) {
+function serializeTag(tag: TagPayload) {
   return {
     id: tag.id.toString(),
     name: tag.name,
     description: tag.description,
+    createdAt: tag.createdAt,
+    updatedAt: tag.updatedAt,
     createdBy: serializeUser(tag.createdByUser),
     updatedBy: serializeUser(tag.updatedByUser),
     owner: serializeUser(tag.ownerUser),
-    createdAt: tag.createdAt,
-    updatedAt: tag.updatedAt,
   }
 }
 
@@ -102,7 +59,7 @@ export async function listTags(input: TagListInput) {
       orderBy: { createdAt: 'desc' },
       skip: input.skip,
       take: pageSize,
-      select: tagSelect,
+      ...tagArgs,
     }),
     prisma.tag.count({ where }),
   ])
@@ -117,8 +74,8 @@ export async function listTags(input: TagListInput) {
 
 export async function getTagById(id: string) {
   const tag = await prisma.tag.findUnique({
-    where: { id: toSnowflakeId(id) },
-    select: tagSelect,
+    where: { id: BigInt(id) },
+    ...tagArgs,
   })
 
   if (!tag) {
@@ -129,50 +86,44 @@ export async function getTagById(id: string) {
 }
 
 export async function createTag(input: CreateTagInput, operatorId: string) {
-  const name = input.name.trim()
-  const description = input.description?.trim() ?? ''
-  const operator = toSnowflakeId(operatorId)
+  const operator = BigInt(operatorId)
 
-  await assertTagNameAvailable(name)
+  await assertTagNameAvailable(input.name)
 
   const tag = await prisma.tag.create({
     data: {
+      ...input,
+      description: input.description ?? '',
       id: nextSnowflakeId(),
-      name,
-      description,
       createdBy: operator,
       updatedBy: operator,
       owner: operator,
     },
-    select: tagSelect,
+    ...tagArgs,
   })
   return serializeTag(tag)
 }
 
 export async function updateTag(input: UpdateTagInput, operatorId: string) {
-  const existingTag = await getTagById(input.id)
-  const name = input.name?.trim() ?? existingTag.name
-  const description = input.description === undefined
-    ? (existingTag.description ?? '')
-    : input.description.trim()
-  const operator = toSnowflakeId(operatorId)
+  const { id, ...data } = input
+  const operator = BigInt(operatorId)
 
-  await assertTagNameAvailable(name, input.id)
+  if (data.name !== undefined) {
+    await assertTagNameAvailable(data.name, id)
+  }
 
   const tag = await prisma.tag.update({
-    where: { id: toSnowflakeId(input.id) },
+    where: { id: BigInt(id) },
     data: {
-      name,
-      description,
+      ...data,
       updatedBy: operator,
     },
-    select: tagSelect,
+    ...tagArgs,
   })
   return serializeTag(tag)
 }
 
 export async function deleteTag(id: string) {
-  await getTagById(id)
-  await prisma.tag.delete({ where: { id: toSnowflakeId(id) } })
+  await prisma.tag.delete({ where: { id: BigInt(id) } })
   return { success: true as const }
 }

@@ -33,29 +33,35 @@ function serialize(s: Prisma.StudentGetPayload<typeof studentArgs>) { ... }
 
 参考实现：`server/src/modules/student/student.service.ts`
 
-## P2. Serializer body 用 spread 简化
+## P2. Serializer body 用逐字段映射，显式收口
+
+Response 是 API 出口边界，必须**显式白名单**。P1 用 `include` 把全表 scalar 拉下来便于 TS 推导入参类型，但 serializer 出口必须逐字段列举——避免 schema 后续加敏感字段（如 `password`、内部状态列）或大字段被 `...rest` 自动透传到 API。
 
 ```ts
-// 反面：逐字段映射，schema 加字段需要同步改三处
-return {
-  id: s.id.toString(),
-  name: s.name,
-  /* 17 行 */
-}
-
-// 正面：rest 解构 + spread + 仅覆盖差异
+// 反面：rest spread 透传，DB 查询范围一旦扩大，新字段会自动流到 API（默认开放，存在泄漏风险）
 const { id, teacherStudentRelations, ...rest } = s
 return {
   ...rest,
   id: id.toString(),
   counselors: teacherStudentRelations.map(/* 计算字段 */),
 }
+
+// 正面：逐字段映射，显式列举所有出口字段
+return {
+  id: s.id.toString(),
+  name: s.name,
+  /* 其他字段逐一列出 */
+  counselors: s.teacherStudentRelations.map(/* 计算字段 */),
+}
 ```
 
 要点：
-- 解构挑出需要变形的字段（`bigint→string`、关系字段映射成业务对象）
-- 其余字段走 `...rest` 自动透传
-- schema 后续新增普通字段会自动流过 serializer；如果是不该出口的字段，需要在 `omit` 中加（这是显式控制点）
+- **默认拒绝、显式放行**：DB 查询范围可能很宽（P1 的 `include` 会拉全表 scalar），serializer 是统一的收口点，schema 加字段不会意外暴露到 API
+- 类型变形（`bigint → string`、Date 序列化等）在映射点统一处理
+- 关系字段映射成业务对象（如 `counselors`）
+- schema 加新字段需要 serializer 同步更新一次——这是合理的「边界」成本，换出口安全
+- 配合 P1 的 `Prisma.XxxGetPayload` 入参类型：TS 提示哪些字段可用，是否写出去由 serializer 显式决定
+- 与 P4 input spread 的方向相反：input 由 Prisma 的 `XxxCreateInput`/`XxxUpdateInput` type-check 把关（多字段 TS 报错），response 没有等价机制，必须由 serializer 白名单把关
 
 ## P3. 移除 service 层冗余清洗
 

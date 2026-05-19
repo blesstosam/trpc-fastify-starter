@@ -367,7 +367,7 @@ export type FileCreateInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutFilesCreatedInput
   updatedByUser?: Prisma.UserCreateNestedOneWithoutFilesUpdatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutFilesOwnedInput
@@ -381,7 +381,7 @@ export type FileUncheckedCreateInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
@@ -423,7 +423,7 @@ export type FileCreateManyInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
@@ -670,7 +670,7 @@ export type FileCreateWithoutCreatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedByUser?: Prisma.UserCreateNestedOneWithoutFilesUpdatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutFilesOwnedInput
 }
@@ -683,7 +683,7 @@ export type FileUncheckedCreateWithoutCreatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -706,7 +706,7 @@ export type FileCreateWithoutUpdatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutFilesCreatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutFilesOwnedInput
 }
@@ -719,7 +719,7 @@ export type FileUncheckedCreateWithoutUpdatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -742,7 +742,7 @@ export type FileCreateWithoutOwnerUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutFilesCreatedInput
   updatedByUser?: Prisma.UserCreateNestedOneWithoutFilesUpdatedInput
 }
@@ -755,7 +755,7 @@ export type FileUncheckedCreateWithoutOwnerUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
 }
@@ -843,7 +843,7 @@ export type FileCreateManyCreatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -856,7 +856,7 @@ export type FileCreateManyUpdatedByUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -869,7 +869,7 @@ export type FileCreateManyOwnerUserInput = {
   type: string
   url: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
 }

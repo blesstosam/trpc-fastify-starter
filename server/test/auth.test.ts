@@ -50,7 +50,6 @@ describe('auth module tRPC integration', () => {
         id: nextSnowflakeId(),
         username: account,
         password: await hashPassword(password),
-        updatedAt: new Date(),
       },
       select: { id: true },
     })

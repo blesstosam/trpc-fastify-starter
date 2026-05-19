@@ -78,7 +78,6 @@ export async function createUser(input: CreateUserInput) {
       avatar: input.avatar ?? null,
       password: passwordHash,
       state: input.state ?? 1,
-      updatedAt: new Date(),
     },
     select: userSelect,
   })
@@ -95,7 +94,6 @@ export async function updateUser(input: UpdateUserInput) {
     data: {
       ...rest,
       ...(passwordHash ? { password: passwordHash } : {}),
-      updatedAt: new Date(),
     },
     select: userSelect,
   })

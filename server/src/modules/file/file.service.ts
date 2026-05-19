@@ -118,7 +118,6 @@ async function createFileRecord(input: {
       createdBy: operator,
       updatedBy: operator,
       owner: operator,
-      updatedAt: new Date(),
     },
     select: fileSelect,
   })

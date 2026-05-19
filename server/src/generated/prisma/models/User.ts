@@ -328,7 +328,7 @@ export type UserCreateInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
@@ -345,7 +345,7 @@ export type UserUncheckedCreateInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput
@@ -396,7 +396,7 @@ export type UserCreateManyInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -607,7 +607,7 @@ export type UserCreateWithoutFilesCreatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
   tagsCreated?: Prisma.TagCreateNestedManyWithoutCreatedByUserInput
@@ -623,7 +623,7 @@ export type UserUncheckedCreateWithoutFilesCreatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput
   tagsCreated?: Prisma.TagUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -644,7 +644,7 @@ export type UserCreateWithoutFilesUpdatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
   tagsCreated?: Prisma.TagCreateNestedManyWithoutCreatedByUserInput
@@ -660,7 +660,7 @@ export type UserUncheckedCreateWithoutFilesUpdatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput
   tagsCreated?: Prisma.TagUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -681,7 +681,7 @@ export type UserCreateWithoutFilesOwnedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   tagsCreated?: Prisma.TagCreateNestedManyWithoutCreatedByUserInput
@@ -697,7 +697,7 @@ export type UserUncheckedCreateWithoutFilesOwnedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   tagsCreated?: Prisma.TagUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -847,7 +847,7 @@ export type UserCreateWithoutTagsCreatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
@@ -863,7 +863,7 @@ export type UserUncheckedCreateWithoutTagsCreatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput
@@ -884,7 +884,7 @@ export type UserCreateWithoutTagsUpdatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
@@ -900,7 +900,7 @@ export type UserUncheckedCreateWithoutTagsUpdatedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput
@@ -921,7 +921,7 @@ export type UserCreateWithoutTagsOwnedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileCreateNestedManyWithoutOwnerUserInput
@@ -937,7 +937,7 @@ export type UserUncheckedCreateWithoutTagsOwnedInput = {
   password: string
   state?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   filesCreated?: Prisma.FileUncheckedCreateNestedManyWithoutCreatedByUserInput
   filesUpdated?: Prisma.FileUncheckedCreateNestedManyWithoutUpdatedByUserInput
   filesOwned?: Prisma.FileUncheckedCreateNestedManyWithoutOwnerUserInput

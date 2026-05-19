@@ -17,7 +17,7 @@ model User {
   state    Int     @default(1) @db.TinyInt
 
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
 
   filesCreated File[] @relation("FileCreatedBy")
   filesUpdated File[] @relation("FileUpdatedBy")
@@ -39,7 +39,7 @@ model File {
   url  String @db.VarChar(512)
 
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
 
   createdBy     BigInt? @map("created_by")
   createdByUser User?   @relation("FileCreatedBy", fields: [createdBy], references: [id])
@@ -57,7 +57,7 @@ model Tag {
   description String? @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @map("updated_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
 
   createdBy     BigInt? @map("created_by")
   createdByUser User?   @relation("TagCreatedBy", fields: [createdBy], references: [id])

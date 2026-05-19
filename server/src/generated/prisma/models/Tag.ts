@@ -324,7 +324,7 @@ export type TagCreateInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutTagsCreatedInput
   updatedByUser?: Prisma.UserCreateNestedOneWithoutTagsUpdatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutTagsOwnedInput
@@ -335,7 +335,7 @@ export type TagUncheckedCreateInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
@@ -368,7 +368,7 @@ export type TagCreateManyInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
@@ -587,7 +587,7 @@ export type TagCreateWithoutCreatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedByUser?: Prisma.UserCreateNestedOneWithoutTagsUpdatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutTagsOwnedInput
 }
@@ -597,7 +597,7 @@ export type TagUncheckedCreateWithoutCreatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -617,7 +617,7 @@ export type TagCreateWithoutUpdatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutTagsCreatedInput
   ownerUser?: Prisma.UserCreateNestedOneWithoutTagsOwnedInput
 }
@@ -627,7 +627,7 @@ export type TagUncheckedCreateWithoutUpdatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -647,7 +647,7 @@ export type TagCreateWithoutOwnerUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdByUser?: Prisma.UserCreateNestedOneWithoutTagsCreatedInput
   updatedByUser?: Prisma.UserCreateNestedOneWithoutTagsUpdatedInput
 }
@@ -657,7 +657,7 @@ export type TagUncheckedCreateWithoutOwnerUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
 }
@@ -739,7 +739,7 @@ export type TagCreateManyCreatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   updatedBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -749,7 +749,7 @@ export type TagCreateManyUpdatedByUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   owner?: bigint | number | null
 }
@@ -759,7 +759,7 @@ export type TagCreateManyOwnerUserInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   createdBy?: bigint | number | null
   updatedBy?: bigint | number | null
 }

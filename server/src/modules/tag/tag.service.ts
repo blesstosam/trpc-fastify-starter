@@ -143,7 +143,6 @@ export async function createTag(input: CreateTagInput, operatorId: string) {
       createdBy: operator,
       updatedBy: operator,
       owner: operator,
-      updatedAt: new Date(),
     },
     select: tagSelect,
   })
@@ -166,7 +165,6 @@ export async function updateTag(input: UpdateTagInput, operatorId: string) {
       name,
       description,
       updatedBy: operator,
-      updatedAt: new Date(),
     },
     select: tagSelect,
   })

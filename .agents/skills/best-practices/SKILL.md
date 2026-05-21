@@ -23,7 +23,6 @@ metadata:
 - 如果要使用`ant-design-vue`里的组件，需要显示的引入，如`import { Avatar } from 'ant-design-vue'`
 - 完成一个页面页面后，使用 `critique` skill 对刚实现的页面进行一次评估，如果有优化的地方根据优化点修复一版（只做一轮修复）
 - 使用Vue3写前端逻辑的流程建议：先使用composables函数写数据逻辑，再写前端模板表达UI，最后组件引入composables函数把数据绑定到模板视图，组件里尽量不要处理业务逻辑
-- 已经封装了一些业务组件，组件定义参考 `vben-components` skill，优先使用这些组件实现对应的功能场景（如列表页、详情页、文件上传、时间轴等），禁止在不使用组件的情况下直接使用`ant-design-vue`的基础组件（如`<a-table>`、`<a-modal>`、`<a-upload>`等）
 - 后端返回的时间为UTC时间，必须统一显示为东八区`YYYY-MM-DD HH:mm:ss`格式，禁止直接渲染`toISOString()`这类包含`T`/`Z`的UTC原始串
 
 ## 后端开发参考

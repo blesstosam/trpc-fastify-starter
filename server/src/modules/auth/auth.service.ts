@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { verifyPassword } from '../../lib/auth'
 import { prisma } from '../../lib/prisma'
+import { serializeUser } from '../user/dto'
 
 const numericAccountRegex = /^\d+$/
 
@@ -15,8 +16,6 @@ const authUserSelect = {
   password: true,
 } as const
 
-type AuthUserRow = Awaited<ReturnType<typeof getUserByAccount>>
-
 async function getUserByAccount(account: string) {
   const whereOr: Array<{ username: string } | { id: bigint }> = [{ username: account }]
   if (numericAccountRegex.test(account)) {
@@ -29,18 +28,6 @@ async function getUserByAccount(account: string) {
     },
     select: authUserSelect,
   })
-}
-
-function serializeUser(user: NonNullable<AuthUserRow>) {
-  return {
-    id: user.id.toString(),
-    username: user.username,
-    fullName: user.fullName,
-    avatar: user.avatar,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-    state: user.state,
-  }
 }
 
 export async function loginByPassword(account: string, password: string) {

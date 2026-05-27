@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto'
 import { TRPCError } from '@trpc/server'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
-import { serializeUser } from '../user/dto'
+import { serializeUserWithNull } from '../user/dto'
 import { getStorageProvider } from './storage'
 
 const fileArgs = {
@@ -28,9 +28,9 @@ function serializeFile(file: FilePayload) {
     url: file.url,
     createdAt: file.createdAt,
     updatedAt: file.updatedAt,
-    createdBy: serializeUser(file.createdByUser),
-    updatedBy: serializeUser(file.updatedByUser),
-    owner: serializeUser(file.ownerUser),
+    createdBy: serializeUserWithNull(file.createdByUser),
+    updatedBy: serializeUserWithNull(file.updatedByUser),
+    owner: serializeUserWithNull(file.ownerUser),
   }
 }
 
@@ -59,9 +59,8 @@ async function createFileRecord(input: {
   name: string
   type: string
   size: bigint
-  operatorId: string
+  operatorId: bigint
 }) {
-  const operator = BigInt(input.operatorId)
   const file = await prisma.file.create({
     data: {
       id: nextSnowflakeId(),
@@ -70,9 +69,9 @@ async function createFileRecord(input: {
       type: input.type,
       size: input.size,
       url: buildFetchUrl(input.key),
-      createdBy: operator,
-      updatedBy: operator,
-      owner: operator,
+      createdBy: input.operatorId,
+      updatedBy: input.operatorId,
+      owner: input.operatorId,
     },
     ...fileArgs,
   })
@@ -112,7 +111,7 @@ export async function listFiles(input: FileListInput) {
   }
 }
 
-export async function createFile(input: CreateFileInput, operatorId: string) {
+export async function createFile(input: CreateFileInput, operatorId: bigint) {
   const storage = getStorageProvider()
   await storage.ensureBucket()
 
@@ -130,7 +129,7 @@ export async function createFile(input: CreateFileInput, operatorId: string) {
   })
 }
 
-export async function addFile(input: AddFileInput, operatorId: string) {
+export async function addFile(input: AddFileInput, operatorId: bigint) {
   const key = input.key
   const storage = getStorageProvider()
   const metadata = await storage.getObjectMeta(key).catch(() => null)

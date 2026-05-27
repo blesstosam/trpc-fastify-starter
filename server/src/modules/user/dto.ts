@@ -42,10 +42,7 @@ export type UserListInput = z.infer<typeof userListInputSchema>
 export type CreateUserInput = z.infer<typeof createUserInputSchema>
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>
 
-export function serializeUser(user: User | null) {
-  if (!user) {
-    return null
-  }
+export function serializeUser(user: User) {
   return {
     id: user.id.toString(),
     username: user.username,
@@ -55,4 +52,11 @@ export function serializeUser(user: User | null) {
     updatedAt: user.updatedAt,
     state: user.state,
   }
+}
+
+export function serializeUserWithNull(user: User | null) {
+  if (!user) {
+    return null
+  }
+  return serializeUser(user)
 }

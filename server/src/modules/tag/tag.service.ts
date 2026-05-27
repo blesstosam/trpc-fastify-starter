@@ -3,7 +3,7 @@ import type { CreateTagInput, TagListInput, UpdateTagInput } from './dto'
 import { TRPCError } from '@trpc/server'
 import { prisma } from '../../lib/prisma'
 import { nextSnowflakeId } from '../../lib/snowflake'
-import { serializeUser } from '../user/dto'
+import { serializeUserWithNull } from '../user/dto'
 
 const tagArgs = {
   include: {
@@ -22,9 +22,9 @@ function serializeTag(tag: TagPayload) {
     description: tag.description,
     createdAt: tag.createdAt,
     updatedAt: tag.updatedAt,
-    createdBy: serializeUser(tag.createdByUser),
-    updatedBy: serializeUser(tag.updatedByUser),
-    owner: serializeUser(tag.ownerUser),
+    createdBy: serializeUserWithNull(tag.createdByUser),
+    updatedBy: serializeUserWithNull(tag.updatedByUser),
+    owner: serializeUserWithNull(tag.ownerUser),
   }
 }
 
@@ -85,9 +85,7 @@ export async function getTagById(id: string) {
   return serializeTag(tag)
 }
 
-export async function createTag(input: CreateTagInput, operatorId: string) {
-  const operator = BigInt(operatorId)
-
+export async function createTag(input: CreateTagInput, operatorId: bigint) {
   await assertTagNameAvailable(input.name)
 
   const tag = await prisma.tag.create({
@@ -95,19 +93,17 @@ export async function createTag(input: CreateTagInput, operatorId: string) {
       ...input,
       description: input.description ?? '',
       id: nextSnowflakeId(),
-      createdBy: operator,
-      updatedBy: operator,
-      owner: operator,
+      createdBy: operatorId,
+      updatedBy: operatorId,
+      owner: operatorId,
     },
     ...tagArgs,
   })
   return serializeTag(tag)
 }
 
-export async function updateTag(input: UpdateTagInput, operatorId: string) {
+export async function updateTag(input: UpdateTagInput, operatorId: bigint) {
   const { id, ...data } = input
-  const operator = BigInt(operatorId)
-
   if (data.name !== undefined) {
     await assertTagNameAvailable(data.name, id)
   }
@@ -116,7 +112,7 @@ export async function updateTag(input: UpdateTagInput, operatorId: string) {
     where: { id: BigInt(id) },
     data: {
       ...data,
-      updatedBy: operator,
+      updatedBy: operatorId,
     },
     ...tagArgs,
   })

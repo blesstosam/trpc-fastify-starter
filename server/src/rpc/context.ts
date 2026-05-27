@@ -3,7 +3,7 @@ import type { JwtPayload } from '../lib/auth'
 import { prisma } from '../lib/prisma'
 
 export interface AuthUser {
-  id: string
+  id: bigint
   username: string
   fullName: string | null
   avatar: string | null
@@ -54,7 +54,7 @@ async function resolveCurrentUser(payload: JwtPayload | null): Promise<AuthUser 
 
   return {
     ...user,
-    id: user.id.toString(),
+    id: user.id,
   }
 }
 
